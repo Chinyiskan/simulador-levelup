@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simulador del Hangar · LevelUp Code</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 6c14 14 18 32 18 52l14 18v8l-18-4-14 14-14-14-18 4v-8l14-18c0-20 4-38 18-52z' fill='%2361dafb'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="assets/css/fuentes.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <style>
+        .inicio { max-width: 1180px; margin: 0 auto; padding: 40px 28px 60px; }
+
+        .cabecera { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: center; margin-bottom: 40px; }
+        .sobre { font-family: var(--pixel); color: var(--amarillo); letter-spacing: 3px; font-size: 1rem; }
+        .cabecera h1 {
+            font-size: 4rem;
+            margin: 6px 0 10px;
+            color: var(--cian);
+            text-shadow: 0 0 24px rgba(97, 218, 251, 0.4), 0 5px 0 #0b3a4a;
+            line-height: 1;
+        }
+        .cabecera p { color: var(--texto-suave); font-size: 1.1rem; max-width: 56ch; line-height: 1.5; margin: 0; }
+
+        .saludo { display: flex; align-items: flex-end; gap: 14px; }
+        .saludo .retrato { width: 140px; height: 140px; }
+        .saludo .retrato img { width: 140px; height: 140px; object-fit: contain; image-rendering: pixelated; animation: flotar 3s ease-in-out infinite; }
+        .saludo .retrato .img-falta { width: 130px; height: 130px; }
+        .saludo .globo {
+            background: #f4f8ff; color: #0b1730; border: 3px solid #0b1730; border-radius: 16px;
+            padding: 12px 16px; max-width: 260px; font-weight: 600; box-shadow: 0 6px 0 rgba(0,0,0,.35);
+            margin-bottom: 40px;
+        }
+        .saludo .globo b { font-family: var(--pixel); color: #0f6f8f; display: block; }
+
+        .modulo { margin-bottom: 40px; }
+        .modulo-cab { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--borde); padding-bottom: 10px; }
+        .modulo-cab h2 { margin: 0; font-size: 1.6rem; font-family: var(--cuerpo); font-weight: 800; letter-spacing: 0; }
+        .modulo-cab span { color: var(--texto-suave); }
+
+        .semanas { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+        .semana {
+            position: relative;
+            display: block;
+            text-decoration: none;
+            color: var(--texto);
+            background: rgba(10, 20, 40, 0.85);
+            border: 2px solid var(--borde);
+            border-radius: 18px;
+            padding: 20px;
+            min-height: 190px;
+            transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+            animation: aparecer 0.5s both;
+        }
+        .semana.abierta:hover { transform: translateY(-5px); border-color: var(--cian); box-shadow: 0 10px 30px rgba(97, 218, 251, 0.2); }
+        .semana.abierta { border-color: #2c5f8a; }
+        .semana.cerrada { opacity: 0.45; cursor: not-allowed; }
+        .semana .num { font-family: var(--mono); font-weight: 700; color: var(--amarillo); font-size: 0.9rem; letter-spacing: 1px; }
+        .semana h3 { font-family: var(--cuerpo); font-weight: 800; letter-spacing: 0; font-size: 1.3rem; margin: 8px 0 6px; }
+        .semana .tema { color: var(--texto-suave); font-size: 0.95rem; margin-bottom: 44px; }
+        .semana .pie { position: absolute; left: 20px; right: 20px; bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .semana .estado { font-family: var(--pixel); font-size: 0.9rem; color: var(--cian); }
+        .semana.cerrada .estado { color: var(--texto-suave); }
+        .semana .estrellas { color: #3b557f; font-size: 1.2rem; letter-spacing: 2px; }
+        .semana .estrellas .llena { color: var(--amarillo); }
+        .semana.nueva::after {
+            content: "NUEVA";
+            position: absolute; top: -10px; right: 14px;
+            font-family: var(--pixel); font-size: 0.75rem;
+            background: var(--amarillo); color: #04121f; padding: 3px 8px; border-radius: 6px;
+            animation: brillo 2s infinite;
+        }
+
+        .pie-pagina { color: var(--texto-suave); text-align: center; font-size: 0.9rem; margin-top: 30px; }
+        .aviso-pantalla { display: none; }
+        @media (max-width: 900px) {
+            .cabecera { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 700px) {
+            .aviso-pantalla { display: block; background: #3a2a0a; border: 1px solid #806020; color: var(--amarillo); padding: 10px 14px; border-radius: 10px; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div id="fondo-espacio"></div>
+
+<div class="capa inicio">
+    <div class="aviso-pantalla">Las misiones están hechas para computador. Agranda la ventana para jugarlas.</div>
+
+    <header class="cabecera">
+        <div>
+            <div class="sobre">LEVELUP CODE · FASE REACT</div>
+            <h1>Simulador<br>del Hangar</h1>
+            <p>Una misión por semana: conceptos de la clase con retos cortos que se resuelven a tu ritmo. Elige la misión que te indique tu profe.</p>
+        </div>
+        <div class="saludo">
+            <div class="globo"><b>NOVA</b>Las misiones nuevas aparecen aquí cada semana. Kuma y yo te esperamos adentro.</div>
+            <div class="retrato" id="retrato-nova"></div>
+        </div>
+    </header>
+
+    <div id="modulos"></div>
+
+    <p class="pie-pagina">Tu progreso (las estrellas) se guarda solo en este navegador.</p>
+</div>
+
+<script>
+    // ============================================================
+    //  Lista de misiones. Para publicar una semana nueva:
+    //  1. Crea su carpeta dentro de /misiones
+    //  2. Ponle "ruta" e "id" aquí (el id debe ser el mismo de Motor.iniciar)
+    // ============================================================
+    var modulos = [
+        {
+            numero: 1,
+            nombre: "Pensar en Componentes",
+            misiones: [
+                { semana: 1, titulo: "Tu Primera App en React", tema: "JSX y módulos", ruta: null },
+                { semana: 2, titulo: "Divide y Vencerás", tema: "Props, children, listas y condicionales", ruta: "misiones/m1-s02-divide-y-venceras/index.html", id: "m1-s02", nueva: true },
+                { semana: 3, titulo: "Interfaces que Cobran Vida", tema: "useState", ruta: null },
+                { semana: 4, titulo: "Listas que Cambian", tema: "Estado con arrays y objetos", ruta: null }
+            ]
+        },
+        {
+            numero: 2,
+            nombre: "Apps que se Sienten Reales",
+            misiones: [
+                { semana: 1, titulo: "Efectos Secundarios", tema: "useEffect", ruta: null },
+                { semana: 2, titulo: "Datos de Afuera", tema: "Fetch en useEffect", ruta: null },
+                { semana: 3, titulo: "Múltiples Vistas", tema: "React Router", ruta: null },
+                { semana: 4, titulo: "Rutas con Datos", tema: "Rutas dinámicas", ruta: null },
+                { semana: 5, titulo: "Estado que Viaja", tema: "Context API", ruta: null }
+            ]
+        }
+    ];
+
+    function leerProgreso() {
+        try { return JSON.parse(localStorage.getItem("simulador-completadas") || "{}") || {}; }
+        catch (e) { return {}; }
+    }
+
+    function pintarModulos() {
+        var progreso = leerProgreso();
+        var contenedor = document.getElementById("modulos");
+        var retraso = 0;
+
+        modulos.forEach(function (m) {
+            var bloque = document.createElement("section");
+            bloque.className = "modulo";
+            bloque.innerHTML = '<div class="modulo-cab"><h2>Módulo ' + m.numero + '</h2><span>' + m.nombre + "</span></div>";
+            var grilla = document.createElement("div");
+            grilla.className = "semanas";
+
+            m.misiones.forEach(function (mi) {
+                var abierta = !!mi.ruta;
+                var tarjeta = document.createElement(abierta ? "a" : "div");
+                tarjeta.className = "semana " + (abierta ? "abierta" : "cerrada") + (mi.nueva && !progreso[mi.id] ? " nueva" : "");
+                if (abierta) tarjeta.href = mi.ruta;
+                tarjeta.style.animationDelay = retraso + "s";
+                retraso += 0.06;
+
+                var estrellas = abierta ? (progreso[mi.id] || 0) : 0;
+                var htmlEstrellas = "";
+                for (var i = 0; i < 3; i++) htmlEstrellas += '<span class="' + (i < estrellas ? "llena" : "") + '" aria-hidden="true">★</span>';
+
+                tarjeta.innerHTML =
+                    '<div class="num">SEMANA ' + mi.semana + "</div>" +
+                    "<h3>" + mi.titulo + "</h3>" +
+                    '<div class="tema">' + mi.tema + "</div>" +
+                    '<div class="pie">' +
+                    '<span class="estado">' + (abierta ? (estrellas ? "Repetir →" : "Entrar →") : "Aún no disponible") + "</span>" +
+                    (abierta ? '<span class="estrellas" role="img" aria-label="' + estrellas + ' de 3 estrellas">' + htmlEstrellas + "</span>" : "") +
+                    "</div>";
+                grilla.appendChild(tarjeta);
+            });
+
+            bloque.appendChild(grilla);
+            contenedor.appendChild(bloque);
+        });
+    }
+
+    function pintarNova() {
+        var cont = document.getElementById("retrato-nova");
+        var img = new Image();
+        img.alt = "";
+        img.src = "assets/img/nova/hola.webp";
+        img.onerror = function () { cont.innerHTML = '<div class="img-falta">NOVA<br>hola.webp</div>'; };
+        cont.appendChild(img);
+    }
+
+    pintarModulos();
+    pintarNova();
+</script>
+<script src="assets/vendor/three.min.js"></script>
+<script src="assets/js/fondo-espacio.js"></script>
+</body>
+</html>

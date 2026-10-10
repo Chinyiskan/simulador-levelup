@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Divide y Vencerás · Simulador</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 6c14 14 18 32 18 52l14 18v8l-18-4-14 14-14-14-18 4v-8l14-18c0-20 4-38 18-52z' fill='%2361dafb'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="../../assets/css/fuentes.css">
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/mision.css">
+    <link rel="stylesheet" href="mision.css">
+</head>
+<!-- data-raiz: ruta desde esta página hasta la raíz del sitio (para encontrar las imágenes) -->
+<body class="mision" data-raiz="../../">
+<div id="fondo-espacio"></div>
+<a class="saltar" href="#escenario">Saltar al contenido</a>
+<div class="aviso-pantalla">La ventana es muy angosta. Agrándala o ponla en pantalla completa para jugar la misión.</div>
+
+<div class="capa app">
+    <header class="hud">
+        <a class="hud-volver" href="../../index.html">← Hangar</a>
+        <div class="hud-titulo">Divide y Vencerás <small>Módulo 1 · Semana 2</small></div>
+        <div class="hud-progreso"><div class="hud-barra"><span></span></div><span class="hud-paso">1 / 15</span></div>
+        <div class="hud-xp"><b>0</b> XP</div>
+        <button class="hud-sonido" title="Sonido (efectos y música)" aria-label="Silenciar todo el sonido"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.8a9 9 0 0 1 0 12.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button class="hud-musica" title="Música de fondo" aria-label="Encender la música"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 17V5l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="2.7" fill="currentColor"/><circle cx="17.5" cy="15.5" r="2.7" fill="currentColor"/></svg></button>
+        <input class="hud-vol" type="range" min="0" max="50" value="14" title="Volumen de la música" aria-label="Volumen de la música">
+    </header>
+
+    <main class="escenario" id="escenario" tabindex="-1">
+
+        <!-- ===================== 1. PORTADA ===================== -->
+        <section class="slide" id="s-portada" data-emote="hola"
+            data-nova="¡Hola, cadete! Soy Nova, mecánica del hangar. En esta misión aprendes a hacer un componente que sirva para muchas naves distintas. Si estás en una llamada, ponte audífonos antes de encender la música. Avanza con el botón o con la flecha → del teclado.">
+            <div class="portada">
+                <div class="mision-num">MÓDULO 1 · SEMANA 2</div>
+                <h1>Divide y Vencerás</h1>
+                <p class="lead">Props, children, listas con <code class="inline">.map()</code>, condicionales y estilos. Aquí vas a armar, romper y arreglar componentes con las manos en el código.</p>
+                <div class="portada-datos">
+                    <div class="dato"><b>~25 min</b><span>tiempo sugerido</span></div>
+                    <div class="dato"><b><span data-total-retos>0</span> retos</b><span>para ganar XP</span></div>
+                    <div class="dato"><b>3 ★</b><span>al final según tu XP</span></div>
+                </div>
+                <p class="prereq"><b>Antes de empezar:</b> ya hiciste tu primer componente (semana 1) y conoces de JavaScript el destructuring, <code class="inline">.map()</code>, <code class="inline">&amp;&amp;</code> y el ternario.</p>
+                <div class="kuma-portada" id="kuma"></div>
+                <div class="portada-botones">
+                    <button class="btn" data-siguiente>Empezar misión →</button>
+                    <button class="btn btn-sec" data-musica-toggle data-texto-off="Encender música (mejor con audífonos)" data-texto-on="Música encendida · apagar" aria-pressed="false">Encender música (mejor con audífonos)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 2. EL PROBLEMA ===================== -->
+        <section class="slide" id="s-problema" data-reto data-emote="idea"
+            data-nova="Esta tarjeta tiene los datos escritos adentro. En App la usé tres veces. Antes de ver la pantalla, adivina qué sale."
+            data-nova-fin="Eso. Las tres dicen Kestrel-7 porque el componente no tiene forma de recibir otra cosa. Los datos tienen que entrar desde afuera, y eso son las props.">
+            <div class="marco">
+                <span class="etiqueta">EL PROBLEMA</span>
+                <h2>Una tarjeta, tres copias</h2>
+                <div class="dos-col">
+                    <div>
+                        <script type="text/x-jsx">
+                            // TarjetaNave.jsx
+                            function TarjetaNave() {
+                                return (
+                                    <article className="tarjeta-nave">
+                                        <h3>Kestrel-7</h3>
+                                        <p>Piloto: Nova</p>
+                                    </article>
+                                );
+                            }
+                        </script>
+                        <script type="text/x-jsx" style="margin-top:12px">
+                            // App.jsx
+                            function App() {
+                                return (
+                                    <main>
+                                        <TarjetaNave />
+                                        <TarjetaNave />
+                                        <TarjetaNave />
+                                    </main>
+                                );
+                            }
+                        </script>
+                    </div>
+                    <div>
+                        <div class="w-quiz reto-caja" data-xp="10">
+                            <p class="w-pregunta">¿Qué muestran las tres tarjetas?</p>
+                            <div class="w-opciones">
+                                <button class="w-opcion" data-pista="React no inventa datos. Fíjate qué hay escrito dentro del componente.">Tres naves distintas</button>
+                                <button class="w-opcion" data-ok>Las tres dicen Kestrel-7</button>
+                                <button class="w-opcion" data-pista="Usar un componente varias veces es válido. No hay error.">Error: no se puede repetir un componente</button>
+                            </div>
+                        </div>
+                        <div class="pantalla oculta-hasta-resolver" style="margin-top:16px">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo">
+                                <div class="tarjeta-nave"><span class="icono-nave"><svg class="ico-nave" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2c3 3 4 7 4 11l3 4v2l-4-1-3 3-3-3-4 1v-2l3-4c0-4 1-8 4-11z" fill="#61dafb"/><circle cx="12" cy="9" r="1.8" fill="#0b1630"/></svg></span><h3>Kestrel-7</h3><p>Piloto: Nova</p></div>
+                                <div class="tarjeta-nave"><span class="icono-nave"><svg class="ico-nave" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2c3 3 4 7 4 11l3 4v2l-4-1-3 3-3-3-4 1v-2l3-4c0-4 1-8 4-11z" fill="#61dafb"/><circle cx="12" cy="9" r="1.8" fill="#0b1630"/></svg></span><h3>Kestrel-7</h3><p>Piloto: Nova</p></div>
+                                <div class="tarjeta-nave"><span class="icono-nave"><svg class="ico-nave" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2c3 3 4 7 4 11l3 4v2l-4-1-3 3-3-3-4 1v-2l3-4c0-4 1-8 4-11z" fill="#61dafb"/><circle cx="12" cy="9" r="1.8" fill="#0b1630"/></svg></span><h3>Kestrel-7</h3><p>Piloto: Nova</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 3. ANATOMÍA ===================== -->
+        <section class="slide" id="s-anatomia" data-reto data-emote="tip"
+            data-ayuda="Haz clic en cada pieza que brilla. Las que ya viste se ponen verdes. Son 7."
+            data-nova="Este es el mismo componente, ahora recibiendo props. Haz clic en cada pieza que brilla para ver qué hace. Son 7."
+            data-nova-fin="Ya conoces las piezas. Resumen: el padre escribe la etiqueta y pone los valores, los datos llegan al hijo en un objeto `props`, y el hijo solo los lee.">
+            <div class="marco">
+                <span class="etiqueta">ANATOMÍA</span>
+                <h2>Las piezas de un componente con props</h2>
+                <div class="col-ancha">
+                    <div>
+<pre class="codigo anatomia" data-listo="1"><span class="punto" data-pieza="1"><span class="tk-key">function</span> TarjetaNave</span><span class="punto" data-pieza="2">(props)</span> <span class="tk-llave">{</span>
+    <span class="punto" data-pieza="3"><span class="tk-key">return</span> (</span>
+        <span class="punto" data-pieza="4"><span class="tk-tag">&lt;article</span> <span class="tk-attr">className</span>=<span class="tk-str">"tarjeta-nave"</span><span class="tk-tag">&gt;</span></span>
+            <span class="tk-tag">&lt;h3&gt;</span><span class="punto" data-pieza="5"><span class="tk-llave">{</span>props.nombre<span class="tk-llave">}</span></span><span class="tk-tag">&lt;/h3&gt;</span>
+            <span class="tk-tag">&lt;p&gt;</span>Piloto: <span class="tk-llave">{</span>props.piloto<span class="tk-llave">}</span><span class="tk-tag">&lt;/p&gt;</span>
+            <span class="tk-tag">&lt;p&gt;</span>Combustible: <span class="tk-llave">{</span>props.combustible<span class="tk-llave">}</span>%<span class="tk-tag">&lt;/p&gt;</span>
+        <span class="tk-tag">&lt;/article&gt;</span>
+    );
+<span class="tk-llave">}</span>
+
+<span class="punto" data-pieza="6"><span class="tk-key">export default</span> TarjetaNave;</span></pre>
+<pre class="codigo anatomia" data-listo="1" style="margin-top:12px"><span class="tk-com">// En App.jsx</span>
+<span class="tk-key">import</span> TarjetaNave <span class="tk-key">from</span> <span class="tk-str">"./TarjetaNave"</span>;
+
+<span class="punto" data-pieza="7"><span class="tk-tag">&lt;TarjetaNave</span> <span class="tk-attr">nombre</span>=<span class="tk-str">"Kestrel-7"</span> <span class="tk-attr">piloto</span>=<span class="tk-str">"Nova"</span> <span class="tk-attr">combustible</span>=<span class="tk-llave">{</span><span class="tk-num">40</span><span class="tk-llave">}</span> <span class="tk-tag">/&gt;</span></span></pre>
+                    </div>
+                    <div>
+                        <div class="ficha-info tarea" id="info-anatomia" data-xp="5">
+                            <div class="info-contador">Piezas revisadas: <b>0</b> / 7</div>
+                            <h3 class="info-titulo">Haz clic en una pieza</h3>
+                            <p class="info-texto">Cada parte del código que brilla tiene una explicación corta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 4. LABORATORIO DE PROPS ===================== -->
+        <section class="slide" id="s-lab-props" data-reto data-emote="idea"
+            data-ayuda="Escribe Lince Rojo en nombre, Kuma en piloto y mueve el deslizador hasta que combustible valga 12. Con el deslizador seleccionado, las flechas ← → lo mueven de uno en uno."
+            data-nova="Laboratorio. Cambia los valores de la izquierda y mira cómo se arma el objeto `props` y la tarjeta. El reto está arriba a la izquierda."
+            data-nova-fin="Mismo componente, otra nave. Lo único que cambiaste fueron los atributos de la etiqueta.">
+            <div class="marco">
+                <span class="etiqueta">LABORATORIO</span>
+                <h2>Las props entran por la etiqueta</h2>
+                <div class="dos-col">
+                    <div>
+                        <div class="reto-caja reto-texto tarea" id="reto-lab" data-xp="15" style="margin:0 0 12px">
+                            <b>Reto:</b> haz que la tarjeta muestre la nave <code class="inline">Lince Rojo</code>, pilotada por <code class="inline">Kuma</code>, con <code class="inline">12</code> de combustible.
+                        </div>
+                        <div class="dos-controles">
+                            <div class="control"><label for="lab-nombre">nombre</label><input type="text" id="lab-nombre" value="Kestrel-7" maxlength="20"></div>
+                            <div class="control"><label for="lab-piloto">piloto</label><input type="text" id="lab-piloto" value="Nova" maxlength="16"></div>
+                        </div>
+                        <div class="control"><label for="lab-comb">combustible: <span id="lab-comb-num">40</span></label><input type="range" id="lab-comb" min="0" max="100" value="40"></div>
+                        <div class="pantalla">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo" id="lab-pantalla"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <pre class="codigo" id="lab-etiqueta" data-listo="1"></pre>
+                        <div class="flecha-baja">React arma este objeto ▼</div>
+                        <pre class="codigo" id="lab-objeto" data-listo="1"></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 5. COMILLAS O LLAVES ===================== -->
+        <section class="slide" id="s-comillas" data-reto data-musica="reto" data-emote="tip"
+            data-nova="Regla de las props: el texto va entre comillas y todo lo demás va entre llaves. Cada ficha es el valor de una prop. Clasifícalas."
+            data-nova-fin="Bien. Con comillas, todo llega como texto, incluso `&quot;40&quot;` y `&quot;true&quot;`. Los números, los booleanos, las variables y los arrays van entre llaves.">
+            <div class="marco">
+                <span class="etiqueta reto">RETO</span>
+                <h2>¿Comillas o llaves?</h2>
+                <div class="dos-col">
+                    <div class="w-clasificar reto-caja" data-xp="15"
+                        data-pista="Solo el texto va entre comillas. Números, true/false, variables y arrays van entre llaves.">
+                        <p class="w-ayuda">Arrastra cada ficha a su caja, o haz clic en la ficha y luego en la caja.</p>
+                        <div class="clasif-pool">
+                            <span class="item" data-cat="comillas">Kestrel-7</span>
+                            <span class="item" data-cat="llaves">40</span>
+                            <span class="item" data-cat="llaves">true</span>
+                            <span class="item" data-cat="comillas">Hangar 3</span>
+                            <span class="item" data-cat="llaves">nave.piloto</span>
+                            <span class="item" data-cat="llaves">[1, 2, 3]</span>
+                        </div>
+                        <div class="cubos">
+                            <div class="cubo" data-cat="comillas"><h4>"entre comillas"</h4><div class="cubo-zona"></div></div>
+                            <div class="cubo" data-cat="llaves"><h4>{entre llaves}</h4><div class="cubo-zona"></div></div>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div class="w-quiz reto-caja" data-xp="10">
+                        <p class="w-pregunta">Si escribo <code class="inline">&lt;TarjetaNave activa="true" /&gt;</code>, ¿qué le llega al componente?</p>
+                        <div class="w-opciones">
+                            <button class="w-opcion" data-pista="Lo que va entre comillas siempre llega como texto, aunque parezca un booleano.">El booleano true</button>
+                            <button class="w-opcion" data-ok>El texto "true"</button>
+                            <button class="w-opcion" data-pista="No hay error. React acepta el valor, pero como texto.">Un error</button>
+                        </div>
+                        <p class="w-explica">Para que llegue como booleano: <code class="inline">activa={true}</code>, o simplemente <code class="inline">activa</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 6. DESTRUCTURING ===================== -->
+        <section class="slide" id="s-destructuring" data-reto data-emote="recuerda"
+            data-nova="Destructuring, el de JavaScript: sacar valores de un objeto y dejarlos en variables, como en `const { a, b } = obj`. En un componente se hace en los paréntesis, y así no escribes `props.` en cada línea. Dale al botón para ver el cambio."
+            data-nova-fin="Perfecto. Los nombres entre llaves tienen que coincidir con los atributos de la etiqueta. Si no, la variable queda en `undefined` y no se pinta nada.">
+            <div class="marco">
+                <span class="etiqueta">DESTRUCTURING</span>
+                <h2>Abrir el objeto en la entrada</h2>
+                <div class="dos-col">
+                    <div>
+                        <div class="cambio-codigo">
+                            <script type="text/x-jsx" id="des-antes">
+                                function TarjetaNave(props) {
+                                    return (
+                                        <article className="tarjeta-nave">
+                                            <h3>{props.nombre}</h3>
+                                            <p>Piloto: {props.piloto}</p>
+                                        </article>
+                                    );
+                                }
+                            </script>
+                            <script type="text/x-jsx" class="oculto" id="des-despues">
+                                function TarjetaNave({ nombre, piloto }) {
+                                    return (
+                                        <article className="tarjeta-nave">
+                                            <h3>{nombre}</h3>
+                                            <p>Piloto: {piloto}</p>
+                                        </article>
+                                    );
+                                }
+                            </script>
+                        </div>
+                        <button class="btn btn-sec" id="des-boton" style="margin-top:14px">Abrir props con destructuring</button>
+                    </div>
+                    <div class="w-huecos reto-caja" data-xp="20"
+                        data-pista="Arriba se abren las props entre llaves. Abajo, cada variable se pinta entre llaves sin `props.` adelante.">
+                        <p class="w-pregunta">Completa la versión con destructuring</p>
+                        <script type="text/x-jsx">
+                            function TarjetaNave([[{ nombre, piloto, combustible }]]) {
+                                return (
+                                    <article className="tarjeta-nave">
+                                        <h3>[[{nombre}]]</h3>
+                                        <p>Combustible: [[{combustible}]]%</p>
+                                    </article>
+                                );
+                            }
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">{props.nombre}</span>
+                            <span class="ficha">{combustible}</span>
+                            <span class="ficha">props</span>
+                            <span class="ficha">{ nombre, piloto, combustible }</span>
+                            <span class="ficha">"combustible"</span>
+                            <span class="ficha">{nombre}</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 7. CHILDREN ===================== -->
+        <section class="slide" id="s-children" data-reto data-emote="idea"
+            data-ayuda="Pulsa dos de los botones + para meter naves entre las etiquetas de Panel."
+            data-nova="`Panel` es un marco con título y un hueco. Lo que metas entre `<Panel>` y `</Panel>` le llega en la prop `children`. Mete por lo menos dos naves con los botones."
+            data-nova-fin="Eso. `Panel` no sabe qué le van a meter: pone el marco y deja `{children}` donde React coloca el contenido.">
+            <div class="marco">
+                <span class="etiqueta">CHILDREN</span>
+                <h2>Lo que va entre las etiquetas</h2>
+                <div class="dos-col">
+                    <div>
+                        <script type="text/x-jsx">
+                            function Panel({ titulo, children }) {
+                                return (
+                                    <section className="panel">
+                                        <h2>{titulo}</h2>
+                                        {children}
+                                    </section>
+                                );
+                            }
+                        </script>
+                        <pre class="codigo" id="ch-codigo" data-listo="1" style="margin-top:12px"></pre>
+                        <div class="ch-botones">
+                            <button class="btn btn-sec" data-nave="Kestrel-7" data-piloto="Nova">+ Kestrel-7</button>
+                            <button class="btn btn-sec" data-nave="Lince Rojo" data-piloto="Kuma">+ Lince Rojo</button>
+                            <button class="btn btn-sec" data-nave="Cometa Azul" data-piloto="Taro">+ Cometa Azul</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pantalla">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo">
+                                <div class="panel-demo">
+                                    <div class="panel-titulo">Hangar 3</div>
+                                    <div class="panel-hueco tarea" id="ch-hueco" data-xp="5"><span class="hueco-texto">{children}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 8. MAP ===================== -->
+        <section class="slide" id="s-map" data-reto data-emote="tip"
+            data-ayuda="Pulsa Ejecutar y, cuando termine, Agregar nave al array."
+            data-nova="Con 3 naves se pueden escribir a mano. Con 30 no. Los datos viven en un array, y `.map()` (el mismo de JavaScript: recorre un array y devuelve otro) arma una tarjeta por cada objeto. Dale a ejecutar."
+            data-nova-fin="Eso. Para tener una nave más solo se agrega un objeto al array: el componente y el `.map()` no se tocan.">
+            <div class="marco">
+                <span class="etiqueta">LISTAS</span>
+                <h2>De un array a una lista con <code class="inline">.map()</code></h2>
+                <div class="dos-col">
+                    <div>
+                        <pre class="codigo" id="map-array" data-listo="1"></pre>
+                        <pre class="codigo" id="map-codigo" data-listo="1" style="margin-top:12px"></pre>
+                    </div>
+                    <div>
+                        <div class="reto-caja reto-texto tarea" id="reto-map" data-xp="10" style="margin-bottom:10px">
+                            <b>Reto:</b> ejecuta el <code class="inline">.map()</code> y después agrega una nave al array.
+                        </div>
+                        <div class="ch-botones" style="margin:0 0 12px">
+                            <button class="btn" id="map-ejecutar">Ejecutar naves.map()</button>
+                            <button class="btn btn-sec" id="map-agregar" disabled>+ Agregar nave al array</button>
+                        </div>
+                        <p class="mini-ayuda" style="margin:-4px 0 10px">El botón agrega el objeto por ti. En una app real, el array llega de un archivo o de un servidor.</p>
+                        <div class="pantalla">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo" id="map-pantalla"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 8b. KEY ===================== -->
+        <section class="slide" id="s-key" data-reto data-emote="advertencia"
+            data-ayuda="Escribe algo en la nota de la primera tarjeta, marca «Quitar la key» y pulsa «Quitar la primera nave». Si ya probaste una vez, usa «Reiniciar lista». Después responde la pregunta."
+            data-nova="Ojo con la `key`. Sin ella la app se ve bien, pero React se confunde cuando la lista cambia. Compruébalo tú: sigue los pasos del reto."
+            data-nova-fin="Eso. Sin `key`, React compara por posición: reusó la primera tarjeta, con tu nota adentro, para mostrar otra nave. La `key` le dice cuál es cuál, y por eso tiene que ser única y estable: el `id`, no el índice.">
+            <div class="marco">
+                <span class="etiqueta">LISTAS</span>
+                <h2>Para qué sirve la <code class="inline">key</code></h2>
+                <div class="dos-col">
+                    <div>
+                        <pre class="codigo" id="key-codigo" data-listo="1"></pre>
+                        <label class="interruptor" for="key-quitar" style="margin-top:12px"><input type="checkbox" id="key-quitar"> Quitar la <code class="inline">key</code></label>
+                        <div class="consola limpia" id="key-consola">Consola: sin avisos</div>
+                        <div class="w-quiz reto-caja oculto" id="key-quiz" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">¿Cuál es una buena <code class="inline">key</code> para cada nave?</p>
+                            <div class="w-opciones dos">
+                                <button class="w-opcion" data-ok><code class="inline">nave.id</code></button>
+                                <button class="w-opcion" data-pista="Si quitas la primera nave, todas cambian de índice. Es el mismo problema que viste: React las compara por posición."><code class="inline">index</code></button>
+                                <button class="w-opcion" data-pista="Cambia en cada render, así que React cree que todas las tarjetas son nuevas y las vuelve a crear."><code class="inline">Math.random()</code></button>
+                                <button class="w-opcion" data-pista="Dos naves pueden llamarse igual. La key tiene que ser única."><code class="inline">nave.nombre</code></button>
+                            </div>
+                            <p class="w-explica">Una buena <code class="inline">key</code> es única y no cambia: el <code class="inline">id</code> del dato. Sirve para que React identifique cada elemento cuando la lista cambia.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pantalla">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo" id="key-pantalla"></div>
+                        </div>
+                        <div class="ch-botones">
+                            <button class="btn btn-sec" id="key-quitar-primera">Quitar la primera nave</button>
+                            <button class="btn btn-sec" id="key-reiniciar">↺ Reiniciar lista</button>
+                        </div>
+                        <div class="reto-caja reto-texto tarea" id="reto-key" data-xp="10" style="margin-top:12px">
+                            <b>Reto:</b>
+                            <ol class="pasos">
+                                <li>Escribe una nota en la primera tarjeta.</li>
+                                <li>Prueba «Quitar la primera nave» con la <code class="inline">key</code> puesta.</li>
+                                <li>«Reiniciar lista», marca «Quitar la key» y repite.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 9. ORDENAR EL MAP ===================== -->
+        <section class="slide" id="s-ordenar" data-reto data-musica="reto" data-emote="advertencia"
+            data-nova="Las líneas de este `.map()` se desordenaron en el hangar. Ponlas en su lugar."
+            data-nova-fin="Quedó. La `key` va en el elemento que devuelve cada vuelta del `.map()`, dentro de su etiqueta de apertura.">
+            <div class="marco">
+                <span class="etiqueta reto">RETO</span>
+                <h2>Arma el <code class="inline">.map()</code></h2>
+                <div class="col-ancha">
+                    <div class="w-ordenar reto-caja" data-xp="20"
+                        data-pista="Empieza con la llave que abre el JavaScript y el `.map(`. Dentro de la etiqueta los atributos van en cualquier orden. Al final se cierra la etiqueta y después los paréntesis.">
+                        <p class="w-ayuda">Arrastra las líneas, o haz clic en una y luego en otra para intercambiarlas.</p>
+                        <ol class="lineas">
+                            <li class="linea" data-pos="1">{naves.map((nave) =&gt; (</li>
+                            <li class="linea" data-pos="2">  &lt;TarjetaNave</li>
+                            <li class="linea" data-pos="3" data-grupo="atributos">    key={nave.id}</li>
+                            <li class="linea" data-pos="4" data-grupo="atributos">    nombre={nave.nombre}</li>
+                            <li class="linea" data-pos="5" data-grupo="atributos">    piloto={nave.piloto}</li>
+                            <li class="linea" data-pos="6">  /&gt;</li>
+                            <li class="linea" data-pos="7">))}</li>
+                        </ol>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div class="nota">
+                        <h3>Pistas del hangar</h3>
+                        <p>La primera línea abre llaves porque dentro del JSX vamos a escribir JavaScript.</p>
+                        <p><code class="inline">.map()</code> recibe una función. Cada vuelta devuelve una <code class="inline">&lt;TarjetaNave /&gt;</code>.</p>
+                        <p>Con <code class="inline">=&gt; (</code> el JSX se devuelve solo, sin escribir <code class="inline">return</code>, y puede ocupar varias líneas.</p>
+                        <p>Los atributos de una etiqueta van en cualquier orden. Los tres de aquí son intercambiables.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 10. CONDICIONALES ===================== -->
+        <section class="slide" id="s-condicionales" data-reto data-emote="idea"
+            data-ayuda="Marca enReparacion y baja el combustible por debajo de 20."
+            data-nova="Dentro de las llaves del JSX no cabe un `if`, porque no devuelve un valor (antes del `return` sí puedes usarlo). Para «esto o nada» se usa `&&`, y para «esto o aquello», el ternario. Mueve los controles y mira qué línea se activa."
+            data-nova-fin="Bien. `&&` funciona como en JavaScript: si lo de la izquierda es false, se corta y React no pinta nada.">
+            <div class="marco">
+                <span class="etiqueta">CONDICIONALES</span>
+                <h2><code class="inline">&amp;&amp;</code> y ternario dentro del JSX</h2>
+                <div class="dos-col">
+                    <div>
+                        <div class="control-fila">
+                            <label class="interruptor" for="cond-rep"><input type="checkbox" id="cond-rep"> enReparacion</label>
+                            <div class="control"><label for="cond-comb">combustible: <span id="cond-num">60</span></label><input type="range" id="cond-comb" min="0" max="100" value="60"></div>
+                        </div>
+                        <div class="reto-caja reto-texto tarea" id="reto-cond" data-xp="15" style="margin:0 0 12px">
+                            <b>Reto:</b> haz que la tarjeta muestre <b>En reparación</b> y <b>Combustible bajo</b> al mismo tiempo.
+                        </div>
+                        <pre class="codigo" id="cond-codigo" data-listo="1"></pre>
+                    </div>
+                    <div>
+                        <div class="pantalla">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo" id="cond-pantalla"></div>
+                        </div>
+                        <div class="w-quiz reto-caja" data-xp="10" style="margin-top:14px">
+                            <p class="w-pregunta">Si <code class="inline">naves</code> está vacío, ¿qué pinta <code class="inline">{naves.length &amp;&amp; &lt;p&gt;Hay naves&lt;/p&gt;}</code>?</p>
+                            <div class="w-opciones dos">
+                                <button class="w-opcion" data-pista="Casi. false no se pinta, pero aquí la izquierda no es false: es un número.">Nada</button>
+                                <button class="w-opcion" data-ok>Un 0 solito</button>
+                                <button class="w-opcion" data-pista="No hay error. El código es válido, solo da un resultado raro.">Un error</button>
+                                <button class="w-opcion" data-pista="false no se pinta nunca en pantalla. Y la izquierda aquí no es false.">La palabra false</button>
+                            </div>
+                            <p class="w-explica">naves.length vale 0, y React sí pinta los números. La solución es comparar: <code class="inline">naves.length &gt; 0 &amp;&amp; ...</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 11. ESTILOS ===================== -->
+        <section class="slide" id="s-estilos" data-reto data-emote="tip"
+            data-nova="Hay tres piezas para los estilos: `className` pone la clase, el CSS importado dice qué hace esa clase, y `style` es para lo que depende de los datos, como el ancho y el color de esta barra. Mueve el combustible por debajo de 20."
+            data-nova-fin="Eso. En `style` va un objeto: propiedades en camelCase (`background-color` se escribe `backgroundColor`) y los valores como texto.">
+            <div class="marco">
+                <span class="etiqueta">ESTILOS</span>
+                <h2>className, CSS importado y <code class="inline">style</code></h2>
+                <div class="tres-formas">
+                    <div class="forma"><b>className</b><pre class="codigo">&lt;article className="tarjeta-nave"&gt;</pre><small>Le pone una clase al elemento.</small></div>
+                    <div class="forma"><b>CSS importado</b><pre class="codigo">import "./TarjetaNave.css";</pre><small>Trae el archivo que define la clase. Es global: afecta a toda la app.</small></div>
+                    <div class="forma"><b>style con objeto</b><pre class="codigo">style={{ width: "40%" }}</pre><small>Para valores que salen de los datos.</small></div>
+                </div>
+                <div class="dos-col" style="margin-top:14px">
+                    <div>
+                        <div class="control"><label for="est-comb">combustible: <span id="est-num">70</span></label><input type="range" id="est-comb" min="0" max="100" value="70"></div>
+                        <div class="tarjeta-nave tarjeta-barra" style="width:100%;animation:none">
+                            <h3>Kestrel-7</h3>
+                            <div class="barra"><div class="barra-relleno" id="est-barra"></div></div>
+                        </div>
+                        <pre class="codigo" id="est-codigo" data-listo="1" style="margin-top:12px"></pre>
+                    </div>
+                    <div class="w-quiz reto-caja" data-xp="15">
+                        <p class="w-pregunta">¿Cuál le pone fondo rojo a un <code class="inline">&lt;div&gt;</code> con <code class="inline">style</code>?</p>
+                        <div class="w-opciones">
+                            <button class="w-opcion" data-pista="En HTML sí, pero en React style no recibe texto: espera un objeto.">style="background-color: red"</button>
+                            <button class="w-opcion" data-pista="Con el guion, JavaScript lo lee como una resta. En style las propiedades van en camelCase.">style={{ background-color: "red" }}</button>
+                            <button class="w-opcion" data-ok>style={{ backgroundColor: "red" }}</button>
+                            <button class="w-opcion" data-pista="Sin comillas, red se lee como una variable que no existe. Los valores van como texto.">style={{ backgroundColor: red }}</button>
+                        </div>
+                        <p class="w-explica">Las llaves de afuera dicen «aquí va JavaScript». Las de adentro son el objeto.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 11b. CAZA-BUGS ===================== -->
+        <section class="slide" id="s-bugs" data-reto data-musica="reto" data-emote="advertencia"
+            data-nova="Cuatro fragmentos, cada uno con un error. Haz clic en la línea que está mal. Son los fallos que más te vas a encontrar al empezar con React."
+            data-nova-fin="Cuatro bugs menos. Si algo falla en el ejercicio, revisa esta lista primero: `className`, mayúscula en el componente, nombres de props iguales y props que no se modifican.">
+            <div class="marco">
+                <span class="etiqueta reto">RETO</span>
+                <h2>Caza-bugs</h2>
+                <p class="w-ayuda" style="margin:0 0 8px">Haz clic en la línea que tiene el error (con teclado: Tab y Enter). Si fallas, la pista te dice por qué esa línea está bien.</p>
+                <div class="bug-grid">
+
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Fíjate en los atributos de las etiquetas JSX.">
+                        <p class="w-pregunta">1 · <code class="inline">TarjetaNave.jsx</code></p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">function TarjetaNave({ nombre }) {</div>
+                            <div class="bug-linea" data-bug>    return &lt;h3 class="titulo"&gt;{nombre}&lt;/h3&gt;;</div>
+                            <div class="bug-linea">}</div>
+                        </div>
+                        <p class="w-explica">En JSX es <code class="inline">className</code>, porque <code class="inline">class</code> ya es una palabra reservada de JavaScript.</p>
+                    </div>
+
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Mira cómo se escribe la etiqueta del componente.">
+                        <p class="w-pregunta">2 · <code class="inline">App.jsx</code></p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">import TarjetaNave from "./TarjetaNave";</div>
+                            <div class="bug-linea">function App() {</div>
+                            <div class="bug-linea" data-bug>    return &lt;tarjetaNave nombre="Kestrel-7" /&gt;;</div>
+                            <div class="bug-linea">}</div>
+                        </div>
+                        <p class="w-explica">Con minúscula, React cree que es una etiqueta HTML y no busca tu componente. Los componentes empiezan con mayúscula: <code class="inline">&lt;TarjetaNave /&gt;</code>.</p>
+                    </div>
+
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Compara cómo se llama el atributo con lo que el componente espera recibir.">
+                        <p class="w-pregunta">3 · Una tarjeta que sale vacía</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea" data-bug>function TarjetaNave({ nombre }) {</div>
+                            <div class="bug-linea">    return &lt;h3&gt;{nombre}&lt;/h3&gt;;</div>
+                            <div class="bug-linea">}</div>
+                            <div class="bug-linea" data-bug>&lt;TarjetaNave name="Lince Rojo" /&gt;</div>
+                        </div>
+                        <p class="w-explica">El atributo es <code class="inline">name</code> y el componente espera <code class="inline">nombre</code>. Tienen que llamarse igual (cambia uno u otro). Si no, <code class="inline">nombre</code> llega <code class="inline">undefined</code> y no se pinta nada.</p>
+                    </div>
+
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Una de las líneas intenta cambiar algo que no debería cambiar.">
+                        <p class="w-pregunta">4 · Un nombre en mayúsculas</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">function TarjetaNave(props) {</div>
+                            <div class="bug-linea" data-bug>    props.nombre = props.nombre.toUpperCase();</div>
+                            <div class="bug-linea">    return &lt;h3&gt;{props.nombre}&lt;/h3&gt;;</div>
+                            <div class="bug-linea">}</div>
+                        </div>
+                        <p class="w-explica">Las props son de solo lectura. Si necesitas otra versión, guárdala en una variable: <code class="inline">const nombre = props.nombre.toUpperCase();</code></p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 12. CHECK FINAL ===================== -->
+        <section class="slide" id="s-check" data-reto data-musica="reto" data-emote="hola"
+            data-nova="Último control antes de salir. Tres preguntas rápidas."
+            data-nova-fin="Listo. Pasa a la última pantalla para ver tus estrellas.">
+            <div class="marco">
+                <span class="etiqueta reto">CHECK FINAL</span>
+                <h2>Control de vuelo</h2>
+                <div class="tres-quiz">
+                    <div class="w-quiz reto-caja" data-xp="10">
+                        <p class="w-pregunta">¿Quién decide qué props recibe un componente?</p>
+                        <div class="w-opciones">
+                            <button class="w-opcion" data-ok>El componente que usa la etiqueta (el padre)</button>
+                            <button class="w-opcion" data-pista="El hijo solo recibe. El padre (quien escribe la etiqueta) decide los valores.">El propio componente</button>
+                            <button class="w-opcion" data-pista="React no elige datos. Solo arma el objeto con los atributos de la etiqueta.">React, automáticamente</button>
+                        </div>
+                    </div>
+                    <div class="w-quiz reto-caja" data-xp="10">
+                        <p class="w-pregunta">¿Un componente puede cambiar sus props?</p>
+                        <div class="w-opciones">
+                            <button class="w-opcion" data-pista="Las props son de solo lectura. Lo que cambia mientras la app corre se llama estado, y se ve más adelante.">Sí, con <code>props.nombre = "otro"</code></button>
+                            <button class="w-opcion" data-ok>No, son de solo lectura</button>
+                            <button class="w-opcion" data-pista="El destructuring solo cambia cómo se escribe la lectura. Las props siguen siendo de solo lectura.">Solo si usa destructuring</button>
+                        </div>
+                    </div>
+                    <div class="w-quiz reto-caja" data-xp="10">
+                        <p class="w-pregunta">En un <code class="inline">.map()</code> que devuelve JSX, ¿dónde va la <code class="inline">key</code>?</p>
+                        <div class="w-opciones">
+                            <button class="w-opcion" data-ok>En la etiqueta que devuelve cada vuelta</button>
+                            <button class="w-opcion" data-pista="Adentro del componente la key no existe: llega undefined.">Dentro del componente hijo</button>
+                            <button class="w-opcion" data-pista="El array tiene el id, pero la key se pone en el JSX.">En cada objeto del array</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 13. FINAL ===================== -->
+        <section class="slide" id="s-final" data-final data-emote="celebra"
+            data-nova="¡Misión completa! Avísale a tu profe que terminaste y sigue con lo que toque en clase. Si algo no te quedó claro, en la lista de abajo puedes volver a cada tema.">
+            <div class="marco final">
+                <span class="etiqueta">MISIÓN COMPLETA</span>
+                <h2>Divide y Vencerás</h2>
+                <div class="final-estrellas"></div>
+                <div class="final-xp"></div>
+                <a class="btn" href="../../index.html" style="text-decoration:none;display:inline-block;margin-top:10px">← Volver al hangar</a>
+                <div class="checklist">
+                    <div title="Volver a este tema" data-ir="s-anatomia">Un componente recibe datos por props, que llegan como un objeto de solo lectura. El padre pone los valores.</div>
+                    <div title="Volver a este tema" data-ir="s-comillas">El texto va entre comillas; números, booleanos, variables y arrays van entre llaves.</div>
+                    <div title="Volver a este tema" data-ir="s-destructuring">Con destructuring se abren las props en los paréntesis: <code class="inline">{ nombre, piloto }</code>.</div>
+                    <div title="Volver a este tema" data-ir="s-children"><code class="inline">children</code> es lo que va entre la etiqueta que abre y la que cierra.</div>
+                    <div title="Volver a este tema" data-ir="s-map"><code class="inline">.map()</code> convierte un array de datos en una lista de elementos.</div>
+                    <div title="Volver a este tema" data-ir="s-key">Cada elemento de la lista lleva <code class="inline">key</code>, en la etiqueta que devuelve cada vuelta.</div>
+                    <div title="Volver a este tema" data-ir="s-condicionales"><code class="inline">&amp;&amp;</code> para «esto o nada», ternario para «esto o aquello».</div>
+                    <div title="Volver a este tema" data-ir="s-estilos"><code class="inline">style</code> recibe un objeto con propiedades en camelCase.</div>
+                    <div title="Volver a este tema" data-ir="s-bugs">Los fallos típicos: <code class="inline">class</code>, componente en minúscula, nombres de props distintos y props modificadas.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="nova-dock">
+        <div class="nova-retrato"></div>
+        <div class="nova-globo"><b>NOVA</b><p class="nova-texto"></p></div>
+        <div class="nav">
+            <button class="btn btn-sec nav-anterior" aria-label="Slide anterior">←</button>
+            <button class="btn btn-sec nav-pista" hidden>Pista</button>
+            <button class="btn nav-siguiente">Siguiente →</button>
+        </div>
+    </footer>
+</div>
+
+<script src="../../assets/vendor/three.min.js"></script>
+<script src="../../assets/js/fondo-espacio.js"></script>
+<script src="../../assets/js/audio.js"></script>
+<script src="../../assets/js/motor.js"></script>
+<script src="mision.js"></script>
+</body>
+</html>
