@@ -163,7 +163,7 @@ var Motor = (function () {
     var finalMostrado = false;
 
     // ----------------------------------------------------------
-    //  Temporizador discreto (opcional): Motor.iniciar({ id, temporizador: { sugerido: "15–20", alertaDesde: 15 } })
+    //  Temporizador discreto (opcional): Motor.iniciar({ id, temporizador: { sugerido: "20–25", alertaDesde: 20 } })
     //  Cuenta desde que el estudiante sale de la portada. Sin sonido. Blanco mientras hay tiempo y rojo desde "alertaDesde" (minutos).
     // ----------------------------------------------------------
     var reloj = null;

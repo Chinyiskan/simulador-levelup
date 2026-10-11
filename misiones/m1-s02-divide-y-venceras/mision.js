@@ -418,4 +418,4 @@ Motor.al("s-completo", function (slide, api) {
     pintarMenu(document.getElementById("completo-pantalla"), PIEZAS, VERSIONES[6]);
 });
 
-Motor.iniciar({ id: "m1-s02", temporizador: { sugerido: "15–20", alertaDesde: 15 } });
+Motor.iniciar({ id: "m1-s02", temporizador: { sugerido: "20–25", alertaDesde: 20 } });
