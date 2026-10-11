@@ -377,12 +377,97 @@ Motor.al("s-condicionales", function (slide, api) {
         if (ag && p >= 70 && !reto.classList.contains("hecha")) {
             api.sonar("ok");
             api.hecha(reto);
+            document.getElementById("quiz-cond").classList.remove("oculto");
         }
     }
 
     agotada.addEventListener("change", function () { api.sonar("clic"); pintar(); });
     pop.addEventListener("input", pintar);
     pintar();
+});
+
+// ---------- Tutorial ----------
+Motor.al("s-tutorial", function (slide, api) {
+    var btn = document.getElementById("tut-btn");
+    var reto = document.getElementById("reto-tut-1");
+    btn.addEventListener("click", function () {
+        api.sonar("ok");
+        api.hecha(reto);
+        btn.disabled = true;
+    });
+});
+
+// ---------- Children en un contenedor ----------
+Motor.al("s-seccion", function (slide, api) {
+    var w = slide.querySelector(".w-huecos");
+    var app = document.getElementById("sec-app");
+    var pantalla = document.getElementById("sec-pantalla");
+    var lineas = [
+        "// App.jsx",
+        '<Seccion titulo="Turno de noche">',
+        '    <Pieza nombre="Propulsor iónico" precio={450} />',
+        '    <Pieza nombre="Escudo deflector" precio={300} />',
+        "</Seccion>"
+    ];
+    pintarLineas(api, app, lineas, lineas, { apagada: false });
+    alResolver(w, function () {
+        pantalla.innerHTML = "";
+        var t = document.createElement("h2");
+        t.className = "sec-titulo";
+        t.textContent = "Turno de noche";
+        pantalla.appendChild(t);
+        [PIEZAS[0], PIEZAS[1]].forEach(function (d) { pantalla.appendChild(crearPieza(d, VERSIONES[3])); });
+        api.sonar("soltar");
+        document.getElementById("quiz-seccion").classList.remove("oculto");
+    });
+});
+
+// ---------- Lista vacía: el 0 de && ----------
+Motor.al("s-vacio", function (slide, api) {
+    var A = document.getElementById("vacio-a");
+    var B = document.getElementById("vacio-b");
+    var btn = document.getElementById("vacio-vender");
+    var reiniciar = document.getElementById("vacio-reiniciar");
+    var reto = document.getElementById("reto-vacio");
+    var nombres = PIEZAS.map(function (p) { return p.nombre; });
+
+    document.getElementById("vacio-codigo-a").innerHTML = api.resaltar(
+        "{piezas.length && (\n    <Catalogo />\n)}"
+    );
+    document.getElementById("vacio-codigo-b").innerHTML = api.resaltar(
+        "{piezas.length > 0 ? (\n    <Catalogo />\n) : (\n    <p>Aún no hay piezas</p>\n)}"
+    );
+
+    function filas(cont, lista) {
+        cont.innerHTML = "";
+        lista.forEach(function (n) {
+            var f = document.createElement("div");
+            f.className = "vacio-fila";
+            f.textContent = n;
+            cont.appendChild(f);
+        });
+    }
+    function pintar(vacia) {
+        if (!vacia) { filas(A, nombres); filas(B, nombres); return; }
+        A.innerHTML = '<span class="vacio-cero">0</span>';
+        B.innerHTML = '<span class="vacio-mensaje">Aún no hay piezas</span>';
+    }
+    pintar(false);
+
+    btn.addEventListener("click", function () {
+        pintar(true);
+        api.sonar("error");
+        btn.disabled = true;
+        if (!reto.classList.contains("hecha")) {
+            api.hecha(reto);
+            document.getElementById("quiz-vacio").classList.remove("oculto");
+        }
+    });
+    reiniciar.addEventListener("click", function () {
+        pintar(false);
+        btn.disabled = false;
+        api.sonar("clic");
+    });
 });
 
 // ---------- Estilos ----------

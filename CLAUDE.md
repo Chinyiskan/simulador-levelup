@@ -34,12 +34,25 @@ Es una herramienta aparte de QuizArena (la app de quizzes de repaso). No la reut
 7. **Exactitud técnica.** Lo que se muestra tiene que ser lo que pasa en React real. Los snippets deben ser JSX válido. Si una demo simula el navegador (por ejemplo, el aviso de `key`), el comportamiento debe coincidir con el real.
 8. **Puede dejar pistas del ejercicio.** Si una slide anticipa algo del ejercicio o la tarea, está bien. El estudiante no conecta solo la teoría con el ejercicio; ayudarle a verlo es parte del trabajo. Lo que no se hace es resolver el ticket entero.
 9. **Cierra mirando al ejercicio.** La pantalla final lista lo visto con enlace a cada paso, y el mensaje de Nova dice qué van a aplicar en el ejercicio de esa semana (por ejemplo: "En el ejercicio aplicas esto a tu Mixtape: la tarjeta recibe props y pasas de una canción a una playlist").
-10. **Gamificado, sin ruido.** XP, estrellas, confeti y Nova que reacciona. La música arranca apagada porque en Meet se cuela por el micrófono. El temporizador es discreto y no suena.
+10. **Gamificado, sin ruido.** XP, estrellas, confeti y Nova que reacciona. La música arranca apagada porque en Meet se cuela por el micrófono. El temporizador es discreto y no suena. La música admite varias pistas por categoría: en `assets/js/audio.js`, la lista `archivos` de `lofi` y de `reto` rota al terminar cada pista, y un archivo que no cargue se descarta solo. Para sumar música, copia el .mp3 a `assets/audio/` y agrega su nombre a la lista.
+
+## Guías visuales de los retos
+
+Los estudiantes se perdían en las slides con dos retos y no sabían qué controles tocar. Reglas que salen de ahí:
+
+- Todo reto lleva sus pasos numerados (`<ol class="pasos">`) y, si hace falta, una línea `<p class="listo-cuando">` con el resultado esperado.
+- Los controles del reto (casillas, barras, botones, campos) van dentro de la caja del reto, nunca sueltos por encima.
+- Una instrucción nombra el control exacto y el valor que se busca ("mueve la barra de popularidad hasta 70 o más"). Un enunciado como "haz que aparezca X y Y a la vez" sin decir cómo no se usa.
+- Si una slide tiene más de un reto, el segundo (una pregunta, por ejemplo) arranca con la clase `oculto` y se muestra cuando el primero se resuelve.
+- `assets/js/guia.js` y `assets/css/guia.css` ya hacen el resto: marcan "RETO 1 DE 2", apagan los retos que esperan, dibujan el globito amarillo con el siguiente clic (fichas, huecos, cajas, Comprobar) y, si el estudiante hace 7 clics seguidos en 3 segundos o falla 3 veces un reto, Nova lo frena y el brillo se intensifica. Para señalar un botón, campo o control propio, ponle `data-guia="texto del globito"`.
+- Cada misión abre con una slide de tutorial (`s-tutorial`, copiable) con dos retos de práctica que enseñan el brillo, el orden de los retos, Pista y "Ver solución".
+- Texto de instrucciones a 1 rem o más; en `.pasos` el tamaño base es 1.02 rem.
 
 ## Tiempo y pantalla
 
 - Duración objetivo: 20 a 25 minutos. El reloj pasa a rojo desde el minuto 20.
-- Si agregas contenido, quita otro. Más de 20 retos o más de 1.800 palabras entre slides y diálogos de Nova ya se pasa del tiempo.
+- Medición real (semana 2, primera prueba con estudiantes): con 19 retos y unas 1.850 palabras entre slides y diálogos de Nova, todos terminaron en 17 minutos. Regla práctica: cada reto cuesta alrededor de 1 minuto y la lectura de cada slide otro medio minuto.
+- La versión actual de la semana 2 suma un tutorial y dos slides (Seccion con children y lista vacía) para llegar a 20-25 minutos. Si agregas contenido, ajusta el reloj y quita otra cosa si el total pasa de 25.
 - Diseño para una ventana de 1366×650. Lo que el estudiante necesita para avanzar tiene que verse sin scroll.
 - Solo computador. No inviertas esfuerzo en móvil.
 
@@ -66,6 +79,7 @@ Es una herramienta aparte de QuizArena (la app de quizzes de repaso). No la reut
 
 - Pregunta o pide permiso antes de crear o cambiar archivos, imágenes o assets que él no pidió. Si te pide solo un prompt, devuelve solo el prompt.
 - Si encuentras algo que mejorar, díselo y espera. No lo apliques por tu cuenta.
+- Cuando él apruebe un cambio ("arréglalo", "hazlo", "aplícalo"), haz el commit y el push a `main` en el mismo paso, sin dejarlo solo en local, y confirma con el hash del commit y con `git ls-remote origin main` que GitHub ya lo tiene. Vercel publica desde GitHub: un cambio que no llegó a `main` no existe para los estudiantes.
 - Responde en español. Sé específico y breve; no rellenes.
 
 ## Antes de dar una misión por buena
@@ -77,6 +91,7 @@ Es una herramienta aparte de QuizArena (la app de quizzes de repaso). No la reut
 5. Los conceptos y su orden coinciden con la teoría de Notion, y el cierre apunta al ejercicio de la semana.
 6. El tiempo estimado cae entre 20 y 25 minutos (cuenta las palabras en pantalla y los retos).
 7. El `id` de la misión en `index.html` de la raíz coincide con el de `Motor.iniciar`.
+8. Cada reto tiene pasos numerados y el globito amarillo apunta al control correcto en cada momento.
 
 ## Agentes de apoyo
 

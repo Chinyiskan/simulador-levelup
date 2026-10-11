@@ -1049,5 +1049,5 @@ var Motor = (function () {
         actualizarNav();
     }
 
-    return { iniciar: iniciar, al: al, resaltar: resaltar };
+    return { iniciar: iniciar, al: al, resaltar: resaltar, api: api };
 })();

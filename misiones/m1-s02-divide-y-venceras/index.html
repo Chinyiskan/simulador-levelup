@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../assets/css/fuentes.css">
     <link rel="stylesheet" href="../../assets/css/base.css">
     <link rel="stylesheet" href="../../assets/css/mision.css">
+    <link rel="stylesheet" href="../../assets/css/guia.css">
     <link rel="stylesheet" href="mision.css">
 </head>
 <body class="mision" data-raiz="../../">
@@ -47,6 +48,46 @@
                 <div class="portada-botones">
                     <button class="btn" data-siguiente>Empezar →</button>
                     <button class="btn btn-sec" data-musica-toggle data-texto-off="Encender música (mejor con audífonos)" data-texto-on="Música encendida · apagar" aria-pressed="false">Encender música (mejor con audífonos)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 1b. TUTORIAL ===================== -->
+        <section class="slide" id="s-tutorial" data-reto data-emote="tip"
+            data-ayuda="Pulsa el botón que brilla. Después haz clic en la ficha, luego en el hueco, y pulsa Comprobar."
+            data-nova="Antes de empezar, un minuto de práctica. Lo que brilla en amarillo es lo siguiente que debes tocar, y el globito amarillo te dice qué hacer. Haz los dos retos de la derecha."
+            data-nova-fin="Eso es todo. En cada reto, sigue el brillo amarillo y los pasos numerados. Si fallas dos veces aparece «Ver solución»; el botón Pista de abajo te repite qué hacer.">
+            <div class="marco">
+                <span class="etiqueta">ANTES DE EMPEZAR · CÓMO SE JUEGA</span>
+                <h2>Calentamiento de un minuto</h2>
+                <div class="dos-col">
+                    <ul class="leyenda">
+                        <li><b class="etq brillo">Brillo amarillo</b><span>Es lo siguiente que debes tocar. El globito te dice qué hacer.</span></li>
+                        <li><b class="etq">RETO 1 DE 2</b><span>Los retos se hacen en orden. El que todavía no toca se ve apagado.</span></li>
+                        <li><b class="etq">Pista</b><span>Botón de abajo a la derecha. Te repite qué hacer en la slide.</span></li>
+                        <li><b class="etq">Ver solución</b><span>Aparece después de dos errores en un reto. Da menos XP.</span></li>
+                        <li><b class="etq">← →</b><span>Las flechas del teclado cambian de slide. «Siguiente» se activa al terminar los retos.</span></li>
+                    </ul>
+                    <div>
+                        <div class="reto-caja reto-texto tarea reto-fila" id="reto-tut-1" data-xp="5" style="margin:0 0 14px">
+                            <ol class="pasos"><li>Pulsa el botón que brilla.</li></ol>
+                            <button class="btn" id="tut-btn" data-guia="clic aquí">Probar el botón</button>
+                        </div>
+                        <div class="w-huecos reto-caja" data-xp="5" data-pista="La ficha correcta es `nombre`: así la tarjeta muestra el nombre de la pieza.">
+                            <ol class="pasos">
+                                <li>Haz clic en la ficha <b>nombre</b> y luego en el hueco. También puedes arrastrarla.</li>
+                                <li>Pulsa <b>Comprobar</b>.</li>
+                            </ol>
+                            <script type="text/x-jsx">
+                                <h3>{[[nombre]]}</h3>
+                            </script>
+                            <div class="fichas">
+                                <span class="ficha">precio</span>
+                                <span class="ficha">nombre</span>
+                            </div>
+                            <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -119,8 +160,8 @@
                     </div>
                     <div>
                         <div class="reto-caja reto-texto tarea" id="reto-repetir" data-xp="5" style="margin:0 0 10px">
-                            <b>Reto:</b> pulsa el botón y mira qué muestran las tres tarjetas.
-                            <div class="ch-botones" style="margin-top:8px"><button class="btn" id="repetir-btn">Usar &lt;Pieza /&gt; tres veces</button></div>
+                            <ol class="pasos"><li>Pulsa el botón <b>Usar &lt;Pieza /&gt; tres veces</b>.</li><li>Mira qué muestran las tres tarjetas.</li></ol>
+                            <div class="ch-botones" style="margin-top:8px"><button class="btn" id="repetir-btn" data-guia="clic aquí">Usar &lt;Pieza /&gt; tres veces</button></div>
                         </div>
                         <div class="pantalla">
                             <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
@@ -273,7 +314,8 @@
                     </div>
                     <div>
                         <div class="reto-caja reto-texto tarea" id="reto-ch" data-xp="10" style="margin:0 0 10px">
-                            <div class="control" style="margin:0"><label for="ch-nota"><b>Reto:</b> escribe una nota para el propulsor</label><input type="text" id="ch-nota" maxlength="28" placeholder="Por ejemplo: sirve para Kestrel-7"></div>
+                            <ol class="pasos"><li>Haz clic en el campo y escribe una nota de 3 letras o más.</li><li>Mira dónde aparece en el código y en la tarjeta.</li></ol>
+                            <div class="control" style="margin:6px 0 0"><label for="ch-nota">Nota para el propulsor</label><input type="text" id="ch-nota" maxlength="28" placeholder="Por ejemplo: sirve para Kestrel-7" data-guia="escribe aquí"></div>
                         </div>
                         <div class="pantalla">
                             <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
@@ -285,6 +327,58 @@
                                 <button class="w-opcion" data-ok>Lo que está entre la etiqueta que abre y la que cierra</button>
                                 <button class="w-opcion" data-pista="children no se escribe como atributo: React lo arma con el contenido que va entre las etiquetas.">Un atributo llamado children</button>
                                 <button class="w-opcion" data-pista="El nombre del padre no llega por children. Ahí llega el contenido de la etiqueta.">El nombre del componente padre</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 7b. CHILDREN EN UN CONTENEDOR ===================== -->
+        <section class="slide" id="s-seccion" data-reto data-emote="idea"
+            data-ayuda="Completa los tres huecos de Seccion con las fichas. Después responde la pregunta que aparece."
+            data-nova="Paso 6, segunda parte: `children` sirve para hacer contenedores. `Seccion` pone un título y deja `{children}` para lo que le escribas adentro. Completa el componente."
+            data-nova-fin="Eso. `Seccion` no sabe qué lleva adentro: pinta el título y deja `{children}` donde irá el contenido. Lo que escribas entre sus etiquetas aparece ahí.">
+            <div class="marco">
+                <span class="etiqueta">PASO 6 · CHILDREN EN UN CONTENEDOR</span>
+                <h2>Un componente que envuelve a otros</h2>
+                <div class="dos-col">
+                    <div class="w-huecos reto-caja" data-xp="15"
+                        data-pista="`Seccion` recibe `titulo` y `children`. El título se pinta con `{titulo}` y el contenido con `{children}`.">
+                        <ol class="pasos">
+                            <li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li>
+                        </ol>
+                        <script type="text/x-jsx">
+                            function Seccion({ titulo, [[children]] }) {
+                                return (
+                                    <section>
+                                        <h2>{[[titulo]]}</h2>
+                                        {[[children]]}
+                                    </section>
+                                );
+                            }
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">children</span>
+                            <span class="ficha">titulo</span>
+                            <span class="ficha">children</span>
+                            <span class="ficha">props</span>
+                            <span class="ficha">nombre</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div>
+                        <pre class="codigo" id="sec-app" data-listo="1"></pre>
+                        <div class="pantalla" style="margin-top:10px">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo" id="sec-pantalla"><span class="hueco-texto">La sección aparece cuando completes el componente.</span></div>
+                        </div>
+                        <div class="w-quiz reto-caja oculto" id="quiz-seccion" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">En este ejemplo, ¿qué recibe <code class="inline">Seccion</code> en <code class="inline">children</code>?</p>
+                            <div class="w-opciones">
+                                <button class="w-opcion" data-ok>Las dos etiquetas Pieza que van entre &lt;Seccion&gt; y &lt;/Seccion&gt;</button>
+                                <button class="w-opcion" data-pista="Ese texto llega por la prop `titulo`, que se escribe como atributo de la etiqueta.">El texto «Turno de noche»</button>
+                                <button class="w-opcion" data-pista="Seccion solo pinta el título y `{children}`. Lo demás lo pone quien la usa.">Nada: Seccion ya trae su contenido</button>
                             </div>
                         </div>
                     </div>
@@ -331,8 +425,8 @@
                             <div class="pantalla-cuerpo" id="map-pantalla"><span class="hueco-texto">El catálogo aparece cuando completes el .map().</span></div>
                         </div>
                         <div class="reto-caja reto-texto tarea" id="reto-map" data-xp="5" style="margin-top:10px">
-                            <b>Reto:</b> agrega una pieza al array.
-                            <div class="ch-botones" style="margin:8px 0 0"><button class="btn btn-sec" id="map-agregar" disabled>+ Agregar pieza al array</button></div>
+                            <ol class="pasos"><li>Cuando salga el catálogo, pulsa <b>Agregar pieza al array</b>.</li></ol>
+                            <div class="ch-botones" style="margin:8px 0 0"><button class="btn btn-sec" id="map-agregar" data-guia="clic aquí" disabled>+ Agregar pieza al array</button></div>
                         </div>
                     </div>
                 </div>
@@ -351,7 +445,7 @@
                     <div class="reto-caja reto-texto tarea" id="reto-key" data-xp="15" style="margin:0">
                         <span class="key-texto"><b>Reto:</b> vende el propulsor, que es la primera pieza, y mira qué nota quedó en cada tarjeta. Cada nota dice de qué pieza es.</span>
                         <div class="ch-botones" style="margin:0">
-                            <button class="btn" id="key-vender">Vender la primera pieza</button>
+                            <button class="btn" id="key-vender" data-guia="clic aquí">Vender la primera pieza</button>
                             <button class="btn btn-sec" id="key-reiniciar">Reiniciar</button>
                         </div>
                     </div>
@@ -384,7 +478,7 @@
 
         <!-- ===================== 10. CONDICIONALES ===================== -->
         <section class="slide" id="s-condicionales" data-reto data-musica="reto" data-emote="idea"
-            data-ayuda="Marca «agotada» y sube la popularidad a 70 o más."
+            data-ayuda="Primero marca la casilla agotada. Después mueve la barra de popularidad hasta 70 o más. Al terminar aparece una pregunta."
             data-nova="Paso 8: dentro de las llaves del JSX no cabe un `if`, porque no devuelve un valor. Para «esto o nada» se usa `&&`; para «esto o aquello», el ternario. Mueve los controles y mira qué línea se activa."
             data-nova-fin="Bien. `&&` funciona como en JavaScript: si lo de la izquierda es false, se corta y React no pinta nada.">
             <div class="marco">
@@ -392,12 +486,16 @@
                 <h2><code class="inline">&amp;&amp;</code> y ternario dentro del JSX</h2>
                 <div class="dos-col">
                     <div>
-                        <div class="control-fila">
-                            <label class="interruptor" for="cond-agotada"><input type="checkbox" id="cond-agotada"> agotada</label>
-                            <div class="control"><label for="cond-pop">popularidad: <span id="cond-num">40</span></label><input type="range" id="cond-pop" min="0" max="100" value="40"></div>
-                        </div>
                         <div class="reto-caja reto-texto tarea" id="reto-cond" data-xp="15" style="margin:0 0 12px">
-                            <b>Reto:</b> haz que la tarjeta muestre <b>AGOTADA</b> y <b>Más vendida</b> a la vez.
+                            <ol class="pasos">
+                                <li>Marca la casilla <b>agotada</b>.</li>
+                                <li>Mueve la barra de <b>popularidad</b> hasta 70 o más.</li>
+                            </ol>
+                            <div class="control-fila" style="margin:8px 0 0">
+                                <label class="interruptor" for="cond-agotada" data-guia="1 · marca la casilla"><input type="checkbox" id="cond-agotada"> agotada</label>
+                                <div class="control" data-guia="2 · mueve la barra"><label for="cond-pop">popularidad: <span id="cond-num">40</span></label><input type="range" id="cond-pop" min="0" max="100" value="40"></div>
+                            </div>
+                            <p class="listo-cuando">la tarjeta dice AGOTADA y Más vendida a la vez.</p>
                         </div>
                         <pre class="codigo" id="cond-codigo" data-listo="1"></pre>
                     </div>
@@ -406,7 +504,7 @@
                             <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
                             <div class="pantalla-cuerpo" id="cond-pantalla"></div>
                         </div>
-                        <div class="w-quiz reto-caja" data-xp="10" style="margin-top:14px">
+                        <div class="w-quiz reto-caja oculto" id="quiz-cond" data-xp="10" style="margin-top:14px">
                             <p class="w-pregunta">Si <code class="inline">stock</code> vale 0, ¿qué pinta <code class="inline">{stock &amp;&amp; &lt;p&gt;Hay&lt;/p&gt;}</code>?</p>
                             <div class="w-opciones dos">
                                 <button class="w-opcion" data-pista="Casi. false no se pinta, pero aquí la izquierda no es false: es un número.">Nada</button>
@@ -416,6 +514,47 @@
                             </div>
                             <p class="w-explica">React sí pinta los números, y 0 es un número. La solución es comparar: <code class="inline">stock &gt; 0 &amp;&amp; ...</code></p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 10b. LISTA VACÍA ===================== -->
+        <section class="slide" id="s-vacio" data-reto data-musica="reto" data-emote="advertencia"
+            data-ayuda="Pulsa «Vender todas las piezas» y compara las dos pantallas. Después responde la pregunta."
+            data-nova="Paso 8, segunda parte: ¿qué pasa cuando el array queda vacío? Vende todas las piezas y compara las dos versiones del código: una con `&&` y otra con ternario."
+            data-nova-fin="Con `piezas.length && ...` sale el número 0, porque React pinta los números. Con el ternario y `> 0` decides tú qué se ve cuando no hay nada.">
+            <div class="marco">
+                <span class="etiqueta">PASO 8 · LISTA VACÍA</span>
+                <h2>Cuando no queda ninguna pieza</h2>
+                <div class="reto-caja reto-texto tarea reto-fila" id="reto-vacio" data-xp="15" style="margin:0 0 12px">
+                    <ol class="pasos">
+                        <li>Pulsa <b>Vender todas las piezas</b>.</li>
+                        <li>Compara qué sale en la pantalla de cada versión.</li>
+                    </ol>
+                    <div class="ch-botones" style="margin:0">
+                        <button class="btn" id="vacio-vender" data-guia="clic aquí">Vender todas las piezas</button>
+                        <button class="btn btn-sec" id="vacio-reiniciar">Reiniciar</button>
+                    </div>
+                </div>
+                <div class="dos-col">
+                    <div class="key-panel">
+                        <h3 class="key-titulo">Con <code class="inline">&amp;&amp;</code></h3>
+                        <pre class="codigo" id="vacio-codigo-a" data-listo="1"></pre>
+                        <div class="pantalla"><div class="pantalla-cuerpo vacio-lista" id="vacio-a"></div></div>
+                    </div>
+                    <div class="key-panel">
+                        <h3 class="key-titulo">Con ternario</h3>
+                        <pre class="codigo" id="vacio-codigo-b" data-listo="1"></pre>
+                        <div class="pantalla"><div class="pantalla-cuerpo vacio-lista" id="vacio-b"></div></div>
+                    </div>
+                </div>
+                <div class="w-quiz reto-caja oculto" id="quiz-vacio" data-xp="10" style="margin-top:12px">
+                    <p class="w-pregunta">¿Cómo se arregla <code class="inline">piezas.length &amp;&amp; ...</code> para que no pinte un 0?</p>
+                    <div class="w-opciones tres">
+                        <button class="w-opcion" data-ok>Comparando: <code class="inline">piezas.length &gt; 0 &amp;&amp; ...</code></button>
+                        <button class="w-opcion" data-pista="Con || pintarías el número de piezas cuando sí hay (por ejemplo, un 3) en lugar de la lista.">Cambiando <code class="inline">&amp;&amp;</code> por <code class="inline">||</code></button>
+                        <button class="w-opcion" data-pista="Un array vacío cuenta como verdadero en JavaScript, así que la lista se pintaría aunque no haya piezas.">Quitando el <code class="inline">.length</code></button>
                     </div>
                 </div>
             </div>
@@ -540,9 +679,9 @@
                     <div title="Volver a este paso" data-ir="s-base">1 · Un componente es una función con mayúscula que devuelve JSX.</div>
                     <div title="Volver a este paso" data-ir="s-props-padre">2 · Los datos entran por props: texto entre comillas, lo demás entre llaves.</div>
                     <div title="Volver a este paso" data-ir="s-destructuring">3 · Con destructuring se abren las props en los paréntesis: <code class="inline">{ nombre, precio }</code>.</div>
-                    <div title="Volver a este paso" data-ir="s-children">4 · <code class="inline">children</code> es lo que va entre la etiqueta que abre y la que cierra.</div>
+                    <div title="Volver a este paso" data-ir="s-children">4 · <code class="inline">children</code> es lo que va entre la etiqueta que abre y la que cierra; así se hacen contenedores como <code class="inline">Seccion</code>.</div>
                     <div title="Volver a este paso" data-ir="s-map">5 · <code class="inline">.map()</code> convierte un array en una lista, y cada elemento lleva <code class="inline">key</code>.</div>
-                    <div title="Volver a este paso" data-ir="s-condicionales">6 · <code class="inline">&amp;&amp;</code> para «esto o nada», ternario para «esto o aquello».</div>
+                    <div title="Volver a este paso" data-ir="s-condicionales">6 · <code class="inline">&amp;&amp;</code> para «esto o nada», ternario para «esto o aquello». Con listas, compara: <code class="inline">piezas.length &gt; 0</code>.</div>
                     <div title="Volver a este paso" data-ir="s-estilos">7 · <code class="inline">className</code> para lo fijo, <code class="inline">style</code> con objeto en camelCase para lo que cambia.</div>
                     <div title="Volver a este paso" data-ir="s-bugs">8 · Revisa los fallos típicos antes de pedir ayuda.</div>
                 </div>
@@ -566,6 +705,7 @@
 <script src="../../assets/js/fondo-espacio.js"></script>
 <script src="../../assets/js/audio.js"></script>
 <script src="../../assets/js/motor.js"></script>
+<script src="../../assets/js/guia.js"></script>
 <script src="mision.js"></script>
 </body>
 </html>

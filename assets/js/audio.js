@@ -28,9 +28,11 @@ var Sonido = (function () {
         confeti:   { archivo: "confetti.mp3",      vol: 0.55 }
     };
 
+    // Cada categoría puede tener varias pistas: al terminar una pasa a la siguiente (mezclándolas).
+    // Para agregar música: copia el .mp3 a assets/audio/ y suma su nombre a la lista.
     var PISTAS = {
-        lofi: { archivo: "hangar-lofi.mp3" },
-        reto: { archivo: "hangar-reto.mp3" }
+        lofi: { archivos: ["hangar-lofi.mp3"] },
+        reto: { archivos: ["hangar-reto.mp3"] }
     };
 
     // La música arranca apagada: en una llamada de Meet, sin audífonos, se cuela por el micrófono.
@@ -111,13 +113,32 @@ var Sonido = (function () {
         this.f = [1, 0];      // volumen interno de cada elemento
         this.roto = false;
         this.precargado = false;
+        this.archivos = (cfg.archivos || [cfg.archivo]).slice();
+        this.i = Math.floor(Math.random() * this.archivos.length);   // cada sesión arranca por una distinta
         this.el = [0, 1].map(function () {
-            var a = new Audio(raiz + "assets/audio/" + cfg.archivo);
+            var a = new Audio();
             a.preload = "none";
-            a.addEventListener("error", function () { self.roto = true; });
+            a.addEventListener("error", function () {
+                // Un archivo que no carga se saca de la lista; solo si no queda ninguno la pista se da por rota
+                var nombre = a.dataset.archivo;
+                var k = self.archivos.indexOf(nombre);
+                if (self.archivos.length > 1 && k >= 0) {
+                    self.archivos.splice(k, 1);
+                    self.i = self.i % self.archivos.length;
+                    a.dataset.archivo = "";
+                    a.removeAttribute("src");
+                } else self.roto = true;
+            });
             return a;
         });
+        this.poner(this.el[0], this.archivos[this.i]);
     }
+
+    Pista.prototype.poner = function (a, nombre) {
+        if (a.dataset.archivo === nombre) return;
+        a.dataset.archivo = nombre;
+        a.src = raiz + "assets/audio/" + nombre;
+    };
 
     Pista.prototype.pausar = function () {
         this.el.forEach(function (a) { if (!a.paused) a.pause(); });
@@ -126,6 +147,10 @@ var Sonido = (function () {
     Pista.prototype.cambiar = function () {
         this.act = 1 - this.act;
         var nuevo = this.el[this.act];
+        if (this.archivos.length > 1) {
+            this.i = (this.i + 1) % this.archivos.length;
+            this.poner(nuevo, this.archivos[this.i]);
+        }
         try { nuevo.currentTime = 0; } catch (e) { }
         this.f[this.act] = 0;
         reproducir(nuevo);
@@ -151,6 +176,8 @@ var Sonido = (function () {
         // Con la pista ya sonando, dejamos lista la copia que se mezclará al final
         if (!this.precargado && a.currentTime > 5) {
             var otro = this.el[1 - this.act];
+            if (this.archivos.length > 1) this.poner(otro, this.archivos[(this.i + 1) % this.archivos.length]);
+            else this.poner(otro, this.archivos[this.i]);
             otro.preload = "auto";
             otro.load();
             this.precargado = true;
