@@ -88,7 +88,7 @@
     color: #d6e4ff;
 }
 .consola-log::before { content: "Consola"; display: block; font-family: var(--cuerpo); font-weight: 800; font-size: 0.72rem; color: var(--texto-suave); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
-.consola-log:empty::after { content: "(vacía)"; color: #5d7194; }
+.consola-log:empty::after { content: "(vacía)"; color: #7f93b4; }
 .consola-log .log { padding: 1px 0; border-top: 1px solid #16223a; }
 .consola-log .log:first-of-type { border-top: 0; }
 .consola-log .log.nuevo { animation: aparecer 0.3s; color: #fff; }
@@ -272,3 +272,5 @@
 .bug-grid.tres-bugs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .bug-grid.tres-bugs > * { min-width: 0; }
 .tres-bugs .bug-linea { font-size: 0.72rem; padding: 1px 6px; }
+
+.bug-linea { white-space: pre-wrap; overflow-wrap: anywhere; }

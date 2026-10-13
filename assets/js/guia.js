@@ -13,7 +13,7 @@ var Guia = (function () {
     var VENTANA_MS = 3000;       // ...dentro de esta ventana disparan el aviso
     var ENFRIAMIENTO_MS = 25000; // mínimo entre avisos
     var ERRORES_AVISO = 3;       // errores en un mismo reto antes de reforzar la guía
-    var INACTIVO_MS = 22000;     // sin tocar nada durante este tiempo, con un reto pendiente, Nova ayuda
+    var INACTIVO_MS = 30000;     // sin tocar nada durante este tiempo, con un reto pendiente, Nova ayuda
     var REPETIR_INACTIVO_MS = 45000;
     var FALLIDOS_AVISO = 3;      // clics donde no hay nada que tocar...
     var FALLIDOS_VENTANA_MS = 6000; // ...dentro de esta ventana
@@ -78,9 +78,14 @@ var Guia = (function () {
         if (reto.classList.contains("w-ordenar") && comprobar && !comprobar.disabled) {
             return { el: comprobar, texto: "cuando termines, comprueba" };
         }
+        if (reto.classList.contains("w-bug")) {
+            var linea = reto.querySelector(".bug-linea");
+            if (linea && !reto.classList.contains("hecha")) return { el: linea, texto: "clic en la línea con el error" };
+        }
         return null;
     }
 
+    var textoActual = "";
     function ponerFlecha(info) {
         if (!flecha) {
             flecha = document.createElement("div");
@@ -88,6 +93,7 @@ var Guia = (function () {
             flecha.setAttribute("aria-hidden", "true");
             document.body.appendChild(flecha);
         }
+        textoActual = info ? info.texto : "";
         if (objetivo && (!info || info.el !== objetivo)) objetivo.classList.remove("guia-pulso");
         if (!info) { objetivo = null; flecha.style.display = "none"; return; }
         objetivo = info.el;
@@ -114,10 +120,12 @@ var Guia = (function () {
             flecha.style.left = r.right + 16 + "px";
             return;
         }
+        var ancho = r.width > 400;
         var arriba = r.top - h - 14 >= hud;
         flecha.classList.toggle("abajo", !arriba);
         var top = arriba ? r.top - h - 14 : r.bottom + 14;
-        var left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8);
+        var centro = ancho ? r.right - w / 2 - 24 : r.left + r.width / 2;
+        var left = Math.min(Math.max(8, centro - w / 2), window.innerWidth - w - 8);
         flecha.style.top = top + "px";
         flecha.style.left = left + "px";
         flecha.style.setProperty("--punta", Math.min(Math.max(14, r.left + r.width / 2 - left), w - 14) + "px");
@@ -163,13 +171,14 @@ var Guia = (function () {
     function reforzar(texto) {
         if (window.Motor && Motor.api) Motor.api.hablar(texto, "advertencia");
         document.body.classList.add("guia-fuerte");
-        if (objetivo && objetivo.scrollIntoView) objetivo.scrollIntoView({ block: "center", behavior: "smooth" });
+        if (objetivo && objetivo.scrollIntoView) objetivo.scrollIntoView({ block: "center", behavior: window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
         setTimeout(function () { document.body.classList.remove("guia-fuerte"); }, 6000);
     }
 
     function alClic(e) {
         var marcado = e.target.closest && e.target.closest("[data-guia]");
         if (marcado) marcado.setAttribute("data-usado", "1");
+        if (e.detail > 1) return; // doble o triple clic: selecciona texto, no cuenta como error
 
         var slide = slideActiva();
         if (!slide || !retoActivo(slide)) { clics = []; return; }
@@ -179,7 +188,7 @@ var Guia = (function () {
 
         // Clic donde no hay nada que tocar (texto, código, fondo de la slide)
         var enEscenario = e.target.closest && e.target.closest(".escenario");
-        if (enEscenario && !e.target.closest(TOCABLE)) {
+        if (enEscenario && !e.target.closest(TOCABLE) && !e.target.closest(".codigo, pre, .mini-ayuda")) {
             fallidos.push(ahora);
             fallidos = fallidos.filter(function (t) { return ahora - t <= FALLIDOS_VENTANA_MS; });
             if (fallidos.length >= FALLIDOS_AVISO && ahora - ultimoAviso > ENFRIAMIENTO_MS) {
@@ -190,6 +199,7 @@ var Guia = (function () {
             }
         }
 
+        if (e.target.closest && e.target.closest(".ficha, .item, .hueco, .cubo-zona")) return;
         clics.push(ahora);
         clics = clics.filter(function (t) { return ahora - t <= VENTANA_MS; });
         if (clics.length >= UMBRAL_CLICS && ahora - ultimoAviso > ENFRIAMIENTO_MS) {
@@ -209,7 +219,8 @@ var Guia = (function () {
         ultimoAvisoInactivo = ahora;
         ultimoAviso = ahora;
         var ayuda = slide.dataset.ayuda;
-        reforzar(ayuda ? "¿Te perdiste? " + ayuda : "¿Te perdiste? Sigue el brillo amarillo: ahí va el siguiente clic. Los pasos del reto están numerados.");
+        var paso = textoActual ? "¿Te perdiste? Ahora toca: " + textoActual + ". El globito amarillo te lo marca." : "";
+        reforzar(paso ? paso : ayuda ? "¿Te perdiste? " + ayuda : "¿Te perdiste? Sigue el brillo amarillo: ahí va el siguiente clic. Los pasos del reto están numerados.");
     }
 
     function marcarActividad() { ultimaActividad = Date.now(); }

@@ -353,6 +353,9 @@ Motor.al("s-copias", function (slide, api) {
         if (cuentas.every(function (c, i) { return c === META[i]; })) {
             api.sonar("ok");
             api.hecha(reto);
+            reto.classList.add("compacto");
+            var pe = slide.querySelector(".props-estado"); if (pe) pe.classList.add("oculto");
+            $("quiz-cp").classList.remove("oculto");
             return;
         }
         var pasado = cuentas.some(function (c, i) { return c > META[i]; });
@@ -558,7 +561,7 @@ Motor.al("s-set", function (slide, api) {
         cliente = "Kuma";
         setTimeout(function () {
             nombre.textContent = cliente;
-            nombre.classList.remove("cambio"); void nombre.offsetWidth;
+            nombre.classList.remove("cambio"); void nombre.offsetWidth; nombre.classList.add("cambio");
             api.sonar("soltar");
         }, 300);
         if (!reto.classList.contains("hecha")) {

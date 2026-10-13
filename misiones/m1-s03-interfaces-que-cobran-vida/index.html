@@ -44,7 +44,7 @@
                     <div class="dato"><b><span data-total-retos>0</span> retos</b><span>para ganar XP</span></div>
                     <div class="dato"><b>3 ★</b><span>al final según tu XP</span></div>
                 </div>
-                <p class="prereq"><b>Antes de empezar:</b> basta con lo de la semana 2 (componentes y props). Lo de JavaScript que se usa (eventos, destructuring, <code class="inline">!</code>, <code class="inline">.filter()</code>) se repasa cuando aparece.</p>
+                <p class="prereq"><b>Antes de empezar:</b> basta con la semana 2 (componentes, props, listas y condicionales). El JavaScript que se usa se repasa cuando aparece.</p>
                 <div class="portada-botones">
                     <button class="btn" data-siguiente>Empezar →</button>
                     <button class="btn btn-sec" data-musica-toggle data-texto-off="Encender música (mejor con audífonos)" data-texto-on="Música encendida · apagar" aria-pressed="false">Encender música (mejor con audífonos)</button>
@@ -291,8 +291,8 @@
         <!-- ===================== 4. BOOLEANO ===================== -->
         <section class="slide" id="s-toggle" data-reto data-emote="recuerda"
             data-ayuda="Pulsa Reservar en la tarjeta y después Cancelar reserva. Luego responde la pregunta."
-            data-nova="Paso 4: el estado puede guardar cualquier tipo de dato. Un booleano sirve para lo que se prende y se apaga, como reservar una pieza. Pulsa el botón dos veces y mira cómo cambia `reservada`."
-            data-nova-fin="`!` invierte el valor: false pasa a true y true a false. Con el `&&` y el ternario de la semana pasada, el sello y el texto del botón cambian solos.">
+            data-nova="Paso 4: el estado puede guardar cualquier tipo de dato. Un booleano sirve para lo que se prende y se apaga, como reservar una pieza. Pulsa el botón dos veces y mira cómo cambia `reservada`. El `&&` y el ternario del código son los de la semana 2."
+            data-nova-fin="`!` invierte el valor: false pasa a true y true a false. Con el `&&` y el ternario, el sello y el texto del botón cambian solos.">
             <div class="marco">
                 <span class="etiqueta">PASO 4 · BOOLEANOS</span>
                 <h2>Prender y apagar con <code class="inline">!</code></h2>
@@ -310,13 +310,13 @@
                             <div class="estado-vivo" id="tg-estado"></div>
                         </div>
                         <div class="w-quiz reto-caja oculto" id="quiz-tg" data-xp="10" style="margin-top:12px">
-                            <p class="w-pregunta">Si <code class="inline">reservada</code> vale <code class="inline">true</code>, ¿qué guarda <code class="inline">setReservada(!reservada)</code>?</p>
-                            <div class="w-opciones dos">
-                                <button class="w-opcion" data-ok>false</button>
-                                <button class="w-opcion" data-pista="`!` invierte el valor. Si era true, queda lo contrario.">true</button>
-                                <button class="w-opcion" data-pista="`!reservada` no se guarda como texto: JavaScript lo calcula antes de llamar al set.">el texto "!reservada"</button>
-                                <button class="w-opcion" data-pista="`!` siempre da un booleano: true o false.">undefined</button>
+                            <p class="w-pregunta"><code class="inline">reservada</code> vale <code class="inline">true</code> y pulsas el botón. ¿Qué texto muestra el botón después?</p>
+                            <div class="w-opciones tres">
+                                <button class="w-opcion" data-ok>Reservar</button>
+                                <button class="w-opcion" data-pista="Ese texto sale cuando reservada es true; al pulsar pasó a false.">Cancelar reserva</button>
+                                <button class="w-opcion" data-pista="El texto del botón lo decide el ternario: solo hay dos opciones, y ninguna es esa.">RESERVADA</button>
                             </div>
+                            <p class="w-explica">Al pulsar, <code class="inline">!reservada</code> da false. Con false el ternario muestra Reservar.</p>
                         </div>
                     </div>
                 </div>
@@ -338,6 +338,15 @@
                             <div><b>Props</b><span>Llegan del padre por la etiqueta. El hijo las lee y no las cambia.</span><code class="inline">nombre</code></div>
                             <div><b>Estado</b><span>Vive dentro del componente y cambia con su set mientras la app corre.</span><code class="inline">cantidad</code></div>
                         </div>
+                    <div class="w-quiz reto-caja oculto" id="quiz-cp" data-xp="10" style="margin-top:0">
+                        <p class="w-pregunta">Cada tarjeta debe recordar si el cliente la marcó como favorita. ¿Dónde guardas ese dato?</p>
+                        <div class="w-opciones tres">
+                            <button class="w-opcion" data-ok>En un useState dentro de Pieza</button>
+                            <button class="w-opcion" data-pista="Las props llegan del padre y el hijo no las cambia. Lo que se cambia con un set es el estado.">En una prop favorita que Pieza cambia</button>
+                            <button class="w-opcion" data-pista="Cambia, pero no repinta (paso 2) y se reinicia en cada pintado.">En un let dentro de Pieza</button>
+                        </div>
+                        <p class="w-explica">Es un dato que cambia dentro de cada copia: va en su propio estado.</p>
+                    </div>
                     </div>
                     <div class="reto-caja reto-texto tarea" id="reto-cp" data-xp="10">
                         <ol class="pasos"><li>Pulsa <b>+1</b> dos veces en el <b>Propulsor iónico</b>.</li><li>Pulsa <b>+1</b> una vez en el <b>Escudo deflector</b>.</li></ol>
@@ -382,7 +391,7 @@
                             </div>
                             <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
                         </div>
-                        <p class="mini-ayuda">Y con el texto en el estado, filtrar es lo de la Fase I:</p>
+                        <p class="mini-ayuda">Filtrar es lo de la Fase I. <code class="inline">visibles</code> no va en el estado y se dibuja con <code class="inline">visibles.map(...)</code>.</p>
                         <script type="text/x-jsx" id="in-filtro">
                             const visibles = piezas.filter((pieza) =>
                                 pieza.nombre.toLowerCase().includes(busqueda.toLowerCase())
@@ -470,6 +479,7 @@
 
         <!-- ===================== 7b. CÓDIGO DEL FORMULARIO ===================== -->
         <section class="slide" id="s-form-codigo" data-reto data-musica="reto" data-emote="tip"
+            data-ayuda="Completa los cuatro huecos del formulario con las fichas y pulsa Comprobar."
             data-nova="Ahora completa tú las piezas clave del formulario que acabas de probar. Son cuatro huecos."
             data-nova-fin="Ese es el patrón de cualquier formulario en React: `onSubmit` en el form, `preventDefault` primero, un `if` con `return` si algo falla, y el error con `&&`.">
             <div class="marco">
@@ -495,7 +505,7 @@
                         </script>
                         <div class="fichas">
                             <span class="ficha">onSubmit</span>
-                            <span class="ficha">reload</span>
+                            <span class="ficha">||</span>
                             <span class="ficha">&&</span>
                             <span class="ficha">preventDefault</span>
                             <span class="ficha">onClick</span>
@@ -612,20 +622,27 @@
 
         <!-- ===================== MINI RETO 1: EVENTOS ===================== -->
         <section class="slide" id="s-match" data-reto data-musica="reto" data-emote="tip"
-            data-nova="Mini reto final, 1 de 2. No solo los botones tienen eventos: los inputs, los formularios y el audio también. Lleva cada situación a la caja del evento que la escucha."
+            data-ayuda="Haz clic en una situación y luego en la caja de su evento. Cuando estén todas, pulsa Comprobar."
+            data-nova="Mini reto final, 1 de 2. Cada cosa que pasa en la página tiene su evento: clics, texto, formularios y audio. Lleva cada situación a la caja del evento que la escucha."
             data-nova-fin="Bien. `onEnded` y `onTimeUpdate` son del `<audio>`: los vas a usar en el reproductor del ejercicio. Funcionan igual que `onClick`: reciben una función.">
             <div class="marco">
                 <span class="etiqueta reto">MINI RETO 1 DE 2</span>
                 <h2>¿Qué evento escucha cada cosa?</h2>
+                <div style="display:flex;gap:14px;align-items:center;margin:0 0 2px">
+                    <p class="mini-ayuda" style="margin:0;flex:1"><code class="inline">onTimeUpdate</code> se dispara varias veces por segundo mientras suena; <code class="inline">onEnded</code> una vez, al terminar. Así van en el <code class="inline">&lt;audio&gt;</code> del ejercicio.</p>
+                    <pre class="codigo codigo-chico" style="margin:0;flex:1.3;padding:4px 10px;line-height:1.3">&lt;audio src={cancion.archivo} controls
+       onTimeUpdate={(e) =&gt; setSegundos(e.target.currentTime)}
+       onEnded={siguiente} /&gt;</pre>
+                </div>
                 <div class="w-clasificar reto-caja" data-xp="15"
                     data-pista="`onClick`: un clic. `onChange`: cambia lo escrito. `onSubmit`: se envía un formulario. `onEnded`: termina el audio. `onTimeUpdate`: el audio avanza mientras suena.">
-                    <ol class="pasos"><li>Haz clic en una situación y luego en la caja de su evento. También puedes arrastrarla.</li><li>Cuando estén todas, pulsa <b>Comprobar</b>.</li></ol>
+                    <ol class="pasos" style="display:flex;gap:18px;margin-bottom:2px"><li>Haz clic en una situación y luego en la caja de su evento.</li><li>Cuando estén todas, pulsa <b>Comprobar</b>.</li></ol>
                     <div class="clasif-pool">
                         <span class="item" data-cat="click">Pulsan el botón +1</span>
                         <span class="item" data-cat="change">Escriben en el buscador</span>
-                        <span class="item" data-cat="submit">Envían el pedido</span>
+                        <span class="item" data-cat="submit">Envían el formulario (Pedir o Enter)</span>
                         <span class="item" data-cat="ended">Termina una canción</span>
-                        <span class="item" data-cat="time">La canción avanza mientras suena</span>
+                        <span class="item" data-cat="time">Avanza la canción</span>
                     </div>
                     <div class="cubos cinco">
                         <div class="cubo" data-cat="click"><h4>onClick</h4><div class="cubo-zona"></div></div>
@@ -641,6 +658,7 @@
 
         <!-- ===================== MINI RETO 2: CAZA-BUGS ===================== -->
         <section class="slide" id="s-bugs" data-reto data-musica="reto" data-emote="advertencia"
+            data-ayuda="En cada fragmento, haz clic en la línea que tiene el error."
             data-nova="Mini reto final, 2 de 2. Tres fragmentos, cada uno con un error. Haz clic en la línea que está mal. Son los fallos que más vas a encontrar esta semana."
             data-nova-fin="Tres bugs menos. Si algo falla en el ejercicio, revisa esta lista primero: funciones sin paréntesis en los eventos, estados que solo cambian con su set y `value` siempre con `onChange`.">
             <div class="marco">
@@ -666,7 +684,7 @@
                             <div class="bug-linea" data-bug>    cantidad = cantidad + 1;</div>
                             <div class="bug-linea">}</div>
                         </div>
-                        <p class="w-explica">Un estado solo cambia con su set: <code class="inline">setCantidad(cantidad + 1)</code>. Además, <code class="inline">cantidad</code> es <code class="inline">const</code> y asignarle da error.</p>
+                        <p class="w-explica"><code class="inline">cantidad</code> es <code class="inline">const</code>: asignarle lanza un error. Y aunque fuera <code class="inline">let</code>, la pantalla no se repintaría. Se cambia con <code class="inline">setCantidad(cantidad + 1)</code>.</p>
                     </div>
                     <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Revisa qué le falta al input para poder escribir.">
                         <p class="w-pregunta">3 · No se puede escribir</p>
@@ -685,7 +703,7 @@
 
         <!-- ===================== COMPLETO ===================== -->
         <section class="slide" id="s-completo" data-emote="celebra"
-            data-nova="Esta es la tarjeta `Pieza` completa, con todo lo que le fuiste sumando, y el catálogo con el buscador. Todo funciona: prueba los botones y el buscador. Sigue cuando quieras.">
+            data-nova="Esta es la tarjeta `Pieza` completa, con todo lo que le fuiste sumando, y el catálogo con el buscador. Prueba los botones y el buscador. Si una pieza sale del filtro, React la desmonta y vuelve con cantidad 0. Sigue cuando quieras.">
             <div class="marco">
                 <span class="etiqueta">TU COMPONENTE</span>
                 <h2>El catálogo del Taller de Nova, vivo</h2>

@@ -24,9 +24,9 @@
     z-index: 3;
 }
 .reto-caja.reto-activo::before { background: var(--amarillo); color: #1a1300; }
-.reto-caja.reto-espera::before { background: #2a3b5c; color: var(--texto-suave); }
-.reto-caja.reto-espera { opacity: 0.55; transition: opacity 0.2s; }
-.reto-caja.reto-espera:hover, .reto-caja.reto-espera:focus-within { opacity: 0.9; }
+.reto-caja.reto-espera::before { background: #34486e; color: #e6f1ff; }
+.reto-caja.reto-espera { opacity: 0.82; filter: saturate(0.5); transition: opacity 0.2s; }
+.reto-caja.reto-espera:hover, .reto-caja.reto-espera:focus-within { opacity: 1; filter: none; }
 
 /* Elemento al que hay que hacer clic */
 .guia-pulso {
