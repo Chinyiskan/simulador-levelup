@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interfaces que Cobran Vida · Simulador</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2361dafb' stroke-width='16' stroke-dasharray='18 8'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%2361dafb'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="../../assets/css/fuentes.css">
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/mision.css">
+    <link rel="stylesheet" href="../../assets/css/guia.css">
+    <link rel="stylesheet" href="mision.css">
+</head>
+<body class="mision" data-raiz="../../">
+<div id="fondo-espacio"></div>
+<a class="saltar" href="#escenario">Saltar al contenido</a>
+<div class="aviso-pantalla">La ventana es muy angosta. Agrándala o ponla en pantalla completa para jugar la misión.</div>
+
+<div class="capa app">
+    <header class="hud">
+        <a class="hud-volver" href="../../index.html">← Hangar</a>
+        <div class="hud-titulo">Interfaces que Cobran Vida <small>Módulo 1 · Semana 3</small></div>
+        <div class="hud-progreso"><div class="hud-barra"><span></span></div><span class="hud-paso">1 / 18</span></div>
+        <div class="hud-xp"><b>0</b> XP</div>
+        <button class="hud-sonido" title="Sonido (efectos y música)" aria-label="Silenciar todo el sonido"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.8a9 9 0 0 1 0 12.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button class="hud-musica" title="Música de fondo" aria-label="Encender la música"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 17V5l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="2.7" fill="currentColor"/><circle cx="17.5" cy="15.5" r="2.7" fill="currentColor"/></svg></button>
+        <input class="hud-vol" type="range" min="0" max="50" value="14" title="Volumen de la música" aria-label="Volumen de la música">
+    </header>
+
+    <main class="escenario" id="escenario" tabindex="-1">
+
+        <!-- ===================== PORTADA ===================== -->
+        <section class="slide" id="s-portada" data-emote="hola"
+            data-nova="¡Hola otra vez, cadete! El catálogo del taller ya muestra las piezas, pero no responde a nada: los botones son puro dibujo. Hoy le damos vida, paso a paso. Avanza con el botón o con la flecha →.">
+            <div class="portada">
+                <div class="mision-num">MÓDULO 1 · SEMANA 3</div>
+                <h1>Interfaces que Cobran Vida</h1>
+                <p class="lead">El catálogo del Taller de Nova aprende a reaccionar: botones que suman, una reserva que se prende y se apaga, un buscador y un formulario de pedidos.</p>
+                <ol class="ruta" aria-label="Pasos de la misión">
+                    <li>Eventos</li><li>Variable vs estado</li><li>useState</li><li>Booleanos</li><li>Un estado por copia</li><li>Inputs controlados</li><li>Formularios</li><li>El set no es instantáneo</li><li>Índice</li>
+                </ol>
+                <div class="portada-datos">
+                    <div class="dato"><b>20–25 min</b><span>tiempo sugerido (el reloj de arriba cuenta)</span></div>
+                    <div class="dato"><b><span data-total-retos>0</span> retos</b><span>para ganar XP</span></div>
+                    <div class="dato"><b>3 ★</b><span>al final según tu XP</span></div>
+                </div>
+                <p class="prereq"><b>Antes de empezar:</b> basta con lo de la semana 2 (componentes y props). Lo de JavaScript que se usa (eventos, destructuring, <code class="inline">!</code>, <code class="inline">.filter()</code>) se repasa cuando aparece.</p>
+                <div class="portada-botones">
+                    <button class="btn" data-siguiente>Empezar →</button>
+                    <button class="btn btn-sec" data-musica-toggle data-texto-off="Encender música (mejor con audífonos)" data-texto-on="Música encendida · apagar" aria-pressed="false">Encender música (mejor con audífonos)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== TUTORIAL ===================== -->
+        <section class="slide" id="s-tutorial" data-reto data-emote="tip"
+            data-ayuda="Pulsa el botón que brilla. Después haz clic en la ficha cantidad, luego en el hueco, y pulsa Comprobar."
+            data-nova="Antes de empezar, un minuto de práctica. Lo que brilla en amarillo es lo siguiente que debes tocar, y el globito amarillo te dice qué hacer. Haz los dos retos de la derecha."
+            data-nova-fin="Eso es todo. En cada reto, sigue el brillo amarillo y los pasos numerados. Si fallas dos veces aparece «Ver solución»; el botón Pista de abajo te repite qué hacer.">
+            <div class="marco">
+                <span class="etiqueta">ANTES DE EMPEZAR · CÓMO SE JUEGA</span>
+                <h2>Calentamiento de un minuto</h2>
+                <div class="dos-col">
+                    <ul class="leyenda">
+                        <li><b class="etq brillo">Brillo amarillo</b><span>Es lo siguiente que debes tocar. El globito te dice qué hacer.</span></li>
+                        <li><b class="etq">RETO 1 DE 2</b><span>Los retos se hacen en orden. El que todavía no toca se ve apagado.</span></li>
+                        <li><b class="etq">Pista</b><span>Botón de abajo a la derecha. Te repite qué hacer en la slide.</span></li>
+                        <li><b class="etq">Ver solución</b><span>Aparece después de dos errores en un reto. Da menos XP.</span></li>
+                        <li><b class="etq">← →</b><span>Las flechas del teclado cambian de slide. «Siguiente» se activa al terminar los retos.</span></li>
+                    </ul>
+                    <div>
+                        <div class="reto-caja reto-texto tarea reto-fila" id="reto-tut-1" data-xp="5" style="margin:0 0 14px">
+                            <ol class="pasos"><li>Pulsa el botón que brilla.</li></ol>
+                            <button class="btn" id="tut-btn" data-guia="clic aquí">Probar el botón</button>
+                        </div>
+                        <div class="w-huecos reto-caja" data-xp="5" data-pista="La ficha correcta es `cantidad`: así la tarjeta muestra cuántas piezas van en el carrito.">
+                            <ol class="pasos">
+                                <li>Haz clic en la ficha <b>cantidad</b> y luego en el hueco. También puedes arrastrarla.</li>
+                                <li>Pulsa <b>Comprobar</b>.</li>
+                            </ol>
+                            <script type="text/x-jsx">
+                                <p>En el carrito: {[[cantidad]]}</p>
+                            </script>
+                            <div class="fichas">
+                                <span class="ficha">precio</span>
+                                <span class="ficha">cantidad</span>
+                            </div>
+                            <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 1. EVENTOS ===================== -->
+        <section class="slide" id="s-eventos" data-reto data-emote="recuerda"
+            data-ayuda="Primero pulsa Agregar en la tarjeta de la derecha. Después completa los dos huecos del botón y pulsa Comprobar."
+            data-nova="Paso 1: eventos. Esta es la tarjeta `Pieza` de la semana pasada, con un botón nuevo. Pulsa «Agregar» en la tarjeta de la derecha y mira la consola de abajo."
+            data-nova-fin="Conectado. Pulsa Agregar: ahora la consola sí responde. En la Fase I usabas `addEventListener`; en React el evento se escribe en la etiqueta, en camelCase: `onClick`, `onChange`, `onSubmit`.">
+            <div class="marco">
+                <span class="etiqueta">PASO 1 · EVENTOS</span>
+                <h2>El botón que no hace nada</h2>
+                <div class="col-ancha">
+                    <div class="col-der">
+                        <div class="reto-caja reto-texto tarea" id="reto-ev-1" data-xp="5" style="margin:0">
+                            <ol class="pasos"><li>Pulsa <b>Agregar</b> en la tarjeta.</li><li>Mira si sale algo en la consola.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo" id="ev-pantalla"></div>
+                            </div>
+                            <div class="consola-log" id="ev-consola"></div>
+                        </div>
+                    </div>
+                    <div class="col-izq">
+                        <div class="w-huecos reto-caja oculto" id="huecos-eventos" data-xp="15"
+                            data-pista="El evento va en camelCase: `onClick`, con C mayúscula. Y se le pasa la función sin paréntesis: `agregar`.">
+                            <ol class="pasos"><li>Conecta el botón: pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                            <script type="text/x-jsx">
+                                function Pieza({ nombre, precio }) {
+                                    function agregar() {
+                                        console.log("Agregado: " + nombre);
+                                    }
+
+                                    return (
+                                        <article className="pieza">
+                                            <h3>{nombre}</h3>
+                                            <p>{precio} cr</p>
+                                            <button [[onClick]]={[[agregar]]}>Agregar</button>
+                                        </article>
+                                    );
+                                }
+                            </script>
+                            <div class="fichas">
+                                <span class="ficha">onclick</span>
+                                <span class="ficha">agregar</span>
+                                <span class="ficha">onClick</span>
+                                <span class="ficha">"agregar"</span>
+                            </div>
+                            <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                        </div>
+                        <div id="codigo-sin-evento">
+                            <script type="text/x-jsx">
+                                function Pieza({ nombre, precio }) {
+                                    function agregar() {
+                                        console.log("Agregado: " + nombre);
+                                    }
+
+                                    return (
+                                        <article className="pieza">
+                                            <h3>{nombre}</h3>
+                                            <p>{precio} cr</p>
+                                            <button>Agregar</button>
+                                        </article>
+                                    );
+                                }
+                            </script>
+                            <p class="mini-ayuda">La función <code class="inline">agregar</code> existe, pero el botón no tiene ningún evento: nadie le dice qué hacer cuando lo pulsan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 1b. SIN PARÉNTESIS ===================== -->
+        <section class="slide" id="s-parentesis" data-reto data-emote="advertencia"
+            data-ayuda="Pulsa «Cargar la página» y compara las dos consolas. Después prueba el botón Agregar de cada versión."
+            data-nova="Paso 1, segunda parte: ¿por qué `agregar` va sin paréntesis? Aquí hay dos versiones del botón. Pulsa «Cargar la página», todavía sin tocar los botones Agregar, y compara las consolas."
+            data-nova-fin="Con paréntesis, `agregar()` se ejecuta en el momento en que React pinta el botón, y el clic ya no hace nada. Si necesitas pasarle un dato, envuélvela en una arrow: `onClick={() => agregar(&quot;PX-200&quot;)}`.">
+            <div class="marco">
+                <span class="etiqueta">PASO 1 · SIN PARÉNTESIS</span>
+                <h2><code class="inline">onClick={agregar}</code> o <code class="inline">onClick={agregar()}</code></h2>
+                <div class="reto-caja reto-texto tarea" id="reto-par" data-xp="10" style="margin:0">
+                    <div class="reto-fila">
+                        <ol class="pasos">
+                            <li>Pulsa <b>Cargar la página</b> y compara las dos consolas. Todavía no toques Agregar.</li>
+                            <li>Después pulsa <b>Agregar</b> en las dos versiones.</li>
+                        </ol>
+                        <button class="btn" id="par-cargar" data-guia="1 · clic aquí">Cargar la página</button>
+                    </div>
+                    <div class="dos-col par-par">
+                        <div class="key-panel">
+                            <h3 class="key-titulo">Sin paréntesis</h3>
+                            <pre class="codigo" id="par-codigo-a" data-listo="1"></pre>
+                            <div class="pantalla"><div class="pantalla-cuerpo par-cuerpo" id="par-a"><span class="hueco-texto">página sin cargar</span></div></div>
+                            <div class="consola-log" id="par-consola-a"></div>
+                        </div>
+                        <div class="key-panel">
+                            <h3 class="key-titulo">Con paréntesis</h3>
+                            <pre class="codigo" id="par-codigo-b" data-listo="1"></pre>
+                            <div class="pantalla"><div class="pantalla-cuerpo par-cuerpo" id="par-b"><span class="hueco-texto">página sin cargar</span></div></div>
+                            <div class="consola-log" id="par-consola-b"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 2. VARIABLE NORMAL ===================== -->
+        <section class="slide" id="s-variable" data-reto data-emote="idea"
+            data-ayuda="Pulsa +1 en la tarjeta tres veces. Después responde la pregunta que aparece."
+            data-nova="Paso 2: queremos que la tarjeta cuente cuántas piezas van al carrito. Primer intento: una variable con `let`. Pulsa +1 tres veces y compara la consola con la tarjeta."
+            data-nova-fin="Es como anotar un dato en un papelito y guardarlo en el bolsillo: el dato cambia, pero ninguna pantalla lo lee. React solo vuelve a pintar un componente cuando le avisan, y para avisarle existe el estado.">
+            <div class="marco">
+                <span class="etiqueta">PASO 2 · EL PROBLEMA</span>
+                <h2>Una variable normal no repinta</h2>
+                <div class="dos-col">
+                    <div>
+                        <pre class="codigo codigo-chico" id="var-codigo" data-listo="1"></pre>
+                    </div>
+                    <div>
+                        <div class="reto-caja reto-texto tarea" id="reto-var" data-xp="5" style="margin:0">
+                            <ol class="pasos"><li>Pulsa <b>+1</b> en la tarjeta tres veces.</li><li>Compara la consola con la tarjeta.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo" id="var-pantalla"></div>
+                            </div>
+                            <div class="consola-log" id="var-consola"></div>
+                        </div>
+                        <div class="w-quiz reto-caja oculto" id="quiz-var" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">La consola dice 3 y la tarjeta sigue en 0. ¿Por qué?</p>
+                            <div class="w-opciones tres">
+                                <button class="w-opcion" data-ok>React no se entera y no vuelve a pintar</button>
+                                <button class="w-opcion" data-pista="La consola muestra 1, 2, 3: la variable sí cambia. Lo que no cambia es la pantalla.">La variable no cambia</button>
+                                <button class="w-opcion" data-pista="Si faltara el evento, la consola no mostraría nada. La función sí se ejecuta.">Al botón le falta el onClick</button>
+                            </div>
+                            <p class="w-explica">Y si React repintara, <code class="inline">let cantidad = 0</code> volvería a cero.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 3. useState ===================== -->
+        <section class="slide" id="s-usestate" data-reto data-emote="tip"
+            data-ayuda="Completa los cuatro huecos con las fichas y pulsa Comprobar. Después pulsa +1 en la tarjeta hasta llegar a 3."
+            data-nova="Paso 3: `useState` crea un dato que el componente recuerda y que React sí escucha. Devuelve dos cosas: el valor y la función que lo cambia. Completa los huecos; el cuadro de la derecha te dice qué es cada parte."
+            data-nova-fin="Cada `setCantidad` guarda el valor nuevo y hace que React vuelva a ejecutar `Pieza`. En esa ejecución, `cantidad` ya vale 1, 2, 3. Por eso el contador de pintados sube con cada clic.">
+            <div class="marco">
+                <span class="etiqueta">PASO 3 · useState</span>
+                <h2>El dato que React sí escucha</h2>
+                <div class="col-ancha">
+                    <div class="w-huecos reto-caja" data-xp="20"
+                        data-pista="Se importa `useState`. Los corchetes reciben el valor y su función: `cantidad` y `setCantidad`. El valor inicial es el número `0`, sin comillas. El botón llama `setCantidad`.">
+                        <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                        <script type="text/x-jsx">
+                            import { [[useState]] } from "react";
+                            function Pieza({ nombre }) {
+                                const [cantidad, [[setCantidad]]] = useState([[0]]);
+                                return (
+                                    <article className="pieza">
+                                        <h3>{nombre}</h3>
+                                        <p>En el carrito: {cantidad}</p>
+                                        <button onClick={() => [[setCantidad]](cantidad + 1)}>+1</button>
+                                    </article>
+                                );
+                            }
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">setCantidad</span>
+                            <span class="ficha">"0"</span>
+                            <span class="ficha">useState</span>
+                            <span class="ficha">cantidad</span>
+                            <span class="ficha">0</span>
+                            <span class="ficha">setCantidad</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div>
+                        <div class="anatomia">
+                            <div class="anatomia-linea"><span class="an-gris">const [</span><span class="an an-valor">cantidad</span><span class="an-gris">,</span> <span class="an an-set">setCantidad</span><span class="an-gris">] = useState(</span><span class="an an-ini">0</span><span class="an-gris">);</span></div>
+                            <ul class="anatomia-etiquetas">
+                                <li><b class="an-valor">cantidad</b> el valor actual</li>
+                                <li><b class="an-set">setCantidad</b> la única forma de cambiarlo</li>
+                                <li><b class="an-ini">0</b> el valor con el que arranca</li>
+                            </ul>
+                            <p class="mini-ayuda">Los corchetes son destructuring: <code class="inline">useState</code> devuelve un array de dos posiciones y tú les pones nombre (<code class="inline">algo</code> y <code class="inline">setAlgo</code>).</p>
+                            <p class="mini-ayuda">El <code class="inline">() =&gt;</code> del botón es una arrow function: se guarda y corre solo al hacer clic. <code class="inline">setCantidad(cantidad + 1)</code> lleva paréntesis, por eso va envuelta.</p>
+                        </div>
+                        <div class="reto-caja reto-texto tarea oculto" id="reto-us" data-xp="5" style="margin:12px 0 0">
+                            <ol class="pasos"><li>Pulsa <b>+1</b> en la tarjeta hasta que diga 3.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo" id="us-pantalla"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 4. BOOLEANO ===================== -->
+        <section class="slide" id="s-toggle" data-reto data-emote="recuerda"
+            data-ayuda="Pulsa Reservar en la tarjeta y después Cancelar reserva. Luego responde la pregunta."
+            data-nova="Paso 4: el estado puede guardar cualquier tipo de dato. Un booleano sirve para lo que se prende y se apaga, como reservar una pieza. Pulsa el botón dos veces y mira cómo cambia `reservada`."
+            data-nova-fin="`!` invierte el valor: false pasa a true y true a false. Con el `&&` y el ternario de la semana pasada, el sello y el texto del botón cambian solos.">
+            <div class="marco">
+                <span class="etiqueta">PASO 4 · BOOLEANOS</span>
+                <h2>Prender y apagar con <code class="inline">!</code></h2>
+                <div class="dos-col">
+                    <div>
+                        <pre class="codigo" id="tg-codigo" data-listo="1"></pre>
+                    </div>
+                    <div>
+                        <div class="reto-caja reto-texto tarea" id="reto-tg" data-xp="10" style="margin:0">
+                            <ol class="pasos"><li>Pulsa <b>Reservar</b> en la tarjeta.</li><li>Pulsa <b>Cancelar reserva</b>.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo" id="tg-pantalla"></div>
+                            </div>
+                            <div class="estado-vivo" id="tg-estado"></div>
+                        </div>
+                        <div class="w-quiz reto-caja oculto" id="quiz-tg" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">Si <code class="inline">reservada</code> vale <code class="inline">true</code>, ¿qué guarda <code class="inline">setReservada(!reservada)</code>?</p>
+                            <div class="w-opciones dos">
+                                <button class="w-opcion" data-ok>false</button>
+                                <button class="w-opcion" data-pista="`!` invierte el valor. Si era true, queda lo contrario.">true</button>
+                                <button class="w-opcion" data-pista="`!reservada` no se guarda como texto: JavaScript lo calcula antes de llamar al set.">el texto "!reservada"</button>
+                                <button class="w-opcion" data-pista="`!` siempre da un booleano: true o false.">undefined</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 5. UN ESTADO POR COPIA ===================== -->
+        <section class="slide" id="s-copias" data-reto data-emote="idea"
+            data-ayuda="Pulsa +1 dos veces en el Propulsor iónico y una vez en el Escudo deflector. Si te pasas, pulsa Reiniciar."
+            data-nova="Paso 5: ¿qué pasa si usas `<Pieza />` tres veces? Compruébalo: deja 2 en el carrito del propulsor y 1 en el del escudo. La celda se queda en 0."
+            data-nova-fin="Cada `<Pieza />` lleva su propia `cantidad`: sumar en una tarjeta no cambia las otras. Y fíjate en la diferencia: `nombre` llega del padre (prop) y `cantidad` vive dentro (estado).">
+            <div class="marco">
+                <span class="etiqueta">PASO 5 · UN ESTADO POR COPIA</span>
+                <h2>Tres tarjetas, tres cuentas</h2>
+                <div class="dos-col">
+                    <div>
+                        <pre class="codigo" id="cp-codigo" data-listo="1"></pre>
+                        <div class="props-estado">
+                            <div><b>Props</b><span>Llegan del padre por la etiqueta. El hijo las lee y no las cambia.</span><code class="inline">nombre</code></div>
+                            <div><b>Estado</b><span>Vive dentro del componente y cambia con su set mientras la app corre.</span><code class="inline">cantidad</code></div>
+                        </div>
+                    </div>
+                    <div class="reto-caja reto-texto tarea" id="reto-cp" data-xp="10">
+                        <ol class="pasos"><li>Pulsa <b>+1</b> dos veces en el <b>Propulsor iónico</b>.</li><li>Pulsa <b>+1</b> una vez en el <b>Escudo deflector</b>.</li></ol>
+                        <p class="listo-cuando">el propulsor dice 2, el escudo 1 y la celda 0.</p>
+                        <div class="pantalla" style="margin-top:8px">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo" id="cp-pantalla"></div>
+                        </div>
+                        <div class="ch-botones" style="margin-top:8px"><button class="btn btn-sec" id="cp-reiniciar">Reiniciar</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 6. INPUT CONTROLADO ===================== -->
+        <section class="slide" id="s-input" data-reto data-emote="recuerda"
+            data-ayuda="Completa los tres huecos del input y pulsa Comprobar. Después escribe celda en el buscador de la derecha."
+            data-nova="Paso 6: en la Fase I leías `input.value` al hacer clic. En React el texto vive en el estado y el input solo muestra lo que diga el estado. Completa el input del buscador."
+            data-nova-fin="Eso es un input controlado: el estado es la única fuente de verdad. Para saber qué hay escrito lees `busqueda`, y con `.filter()` la lista se achica con cada tecla.">
+            <div class="marco">
+                <span class="etiqueta">PASO 6 · INPUTS CONTROLADOS</span>
+                <h2>Un buscador para el catálogo</h2>
+                <div class="col-ancha">
+                    <div>
+                        <div class="w-huecos reto-caja" data-xp="20"
+                            data-pista="`value` muestra el estado: `busqueda`. En `onChange` se guarda lo escrito con `setBusqueda`, y el texto viene en `e.target.value`.">
+                            <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                            <script type="text/x-jsx">
+                                const [busqueda, setBusqueda] = useState("");
+                                <input
+                                    type="text"
+                                    value={[[busqueda]]}
+                                    onChange={(e) => [[setBusqueda]]([[e.target.value]])}
+                                />
+                            </script>
+                            <div class="fichas">
+                                <span class="ficha">e.target.value</span>
+                                <span class="ficha">setBusqueda</span>
+                                <span class="ficha">"busqueda"</span>
+                                <span class="ficha">busqueda</span>
+                                <span class="ficha">e.value</span>
+                            </div>
+                            <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                        </div>
+                        <p class="mini-ayuda">Y con el texto en el estado, filtrar es lo de la Fase I:</p>
+                        <script type="text/x-jsx" id="in-filtro">
+                            const visibles = piezas.filter((pieza) =>
+                                pieza.nombre.toLowerCase().includes(busqueda.toLowerCase())
+                            );
+                        </script>
+                    </div>
+                    <div>
+                        <ol class="ciclo" id="in-ciclo" aria-label="Lo que pasa con cada tecla">
+                            <li>escribes</li><li>onChange</li><li>setBusqueda</li><li>repinta</li><li>muestra busqueda</li>
+                        </ol>
+                        <div class="reto-caja reto-texto tarea oculto" id="reto-in" data-xp="10" style="margin:10px 0 0">
+                            <ol class="pasos"><li>Escribe <b>celda</b> en el buscador. Mira la fila de arriba: el ciclo se repite con cada tecla.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo columna">
+                                    <input type="text" class="buscador" id="in-buscador" placeholder="Buscar pieza..." aria-label="Buscar pieza" autocomplete="off" data-guia="escribe aquí">
+                                    <div class="lista-piezas" id="in-lista"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 6b. INPUT CONGELADO ===================== -->
+        <section class="slide" id="s-congelado" data-reto data-emote="advertencia"
+            data-ayuda="Haz clic en el input de la derecha (sin onChange) e intenta escribir cualquier cosa."
+            data-nova="Paso 6, segunda parte: ¿qué pasa si pones `value` y se te olvida `onChange`? El de la izquierda está completo. Intenta escribir en el de la derecha."
+            data-nova-fin="El input muestra lo que dice el estado, y como nadie cambia el estado, siempre muestra lo mismo. React hasta lo avisa en la consola. `value` y `onChange` van siempre juntos.">
+            <div class="marco">
+                <span class="etiqueta">PASO 6 · VALUE SIN ONCHANGE</span>
+                <h2>El input congelado</h2>
+                <div class="reto-caja reto-texto tarea" id="reto-cg" data-xp="10" style="margin:0">
+                    <ol class="pasos"><li>Haz clic en el input <b>sin onChange</b> (el de la derecha) e intenta escribir.</li></ol>
+                    <div class="dos-col">
+                        <div class="key-panel">
+                            <h3 class="key-titulo">Con <code class="inline">onChange</code></h3>
+                            <pre class="codigo" id="cg-codigo-a" data-listo="1"></pre>
+                            <div class="pantalla"><div class="pantalla-cuerpo columna"><input type="text" class="buscador" id="cg-a" placeholder="Escribe aquí..." aria-label="Input con onChange" autocomplete="off"></div></div>
+                        </div>
+                        <div class="key-panel">
+                            <h3 class="key-titulo">Sin <code class="inline">onChange</code></h3>
+                            <pre class="codigo" id="cg-codigo-b" data-listo="1"></pre>
+                            <div class="pantalla"><div class="pantalla-cuerpo columna"><input type="text" class="buscador" id="cg-b" placeholder="Escribe aquí..." aria-label="Input sin onChange" autocomplete="off" data-guia="intenta escribir aquí"></div></div>
+                            <div class="consola-log error oculto" id="cg-consola">Warning: You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 7. FORMULARIO ===================== -->
+        <section class="slide" id="s-form" data-reto data-musica="reto" data-emote="idea"
+            data-ayuda="Escribe una sola letra en el nombre y pulsa Pedir. Cuando salga el error, escribe un nombre de 3 letras o más y pulsa Pedir otra vez."
+            data-nova="Paso 7: un formulario junta todo: inputs controlados, un evento y una condición. Prueba el formulario de pedidos: primero con una sola letra, después con un nombre de verdad. Mira qué líneas se ejecutan."
+            data-nova-fin="`onSubmit` va en el `<form>`, así funciona con clic y con Enter. `e.preventDefault()` evita que la página se recargue, el `if` valida, y `disabled` apaga el botón mientras el campo esté vacío.">
+            <div class="marco">
+                <span class="etiqueta">PASO 7 · FORMULARIOS</span>
+                <h2>Pedidos con validación</h2>
+                <div class="col-ancha">
+                    <pre class="codigo codigo-chico" id="fm-codigo" data-listo="1"></pre>
+                    <div class="reto-caja reto-texto tarea" id="reto-fm" data-xp="20">
+                        <ol class="pasos">
+                            <li>Escribe <b>una sola letra</b> en el nombre y pulsa <b>Pedir</b>.</li>
+                            <li>Cuando salga el error, escribe un nombre de <b>3 letras o más</b> y pulsa <b>Pedir</b> otra vez.</li>
+                        </ol>
+                        <div class="pantalla">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo columna">
+                                <form class="pedido" id="fm-form" novalidate>
+                                    <label for="fm-nombre">Pedido del Propulsor iónico · tu nombre</label>
+                                    <input type="text" class="buscador" id="fm-nombre" maxlength="24" autocomplete="off" data-guia="1 · escribe una letra">
+                                    <button type="submit" class="btn" id="fm-boton" disabled data-guia="2 · pulsa Pedir">Pedir</button>
+                                    <p class="pedido-error oculto" id="fm-error"></p>
+                                    <p class="pedido-ok oculto" id="fm-ok"></p>
+                                </form>
+                            </div>
+                        </div>
+                        <p class="mini-ayuda">El botón se apaga solo mientras el campo está vacío: eso es <code class="inline">disabled</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 7b. CÓDIGO DEL FORMULARIO ===================== -->
+        <section class="slide" id="s-form-codigo" data-reto data-musica="reto" data-emote="tip"
+            data-nova="Ahora completa tú las piezas clave del formulario que acabas de probar. Son cuatro huecos."
+            data-nova-fin="Ese es el patrón de cualquier formulario en React: `onSubmit` en el form, `preventDefault` primero, un `if` con `return` si algo falla, y el error con `&&`.">
+            <div class="marco">
+                <span class="etiqueta">PASO 7 · EL CÓDIGO</span>
+                <h2>Arma el formulario</h2>
+                <div class="col-ancha">
+                    <div class="w-huecos reto-caja" data-xp="20"
+                        data-pista="`e.preventDefault()` evita la recarga. `return` corta la función si hay error. El evento del formulario es `onSubmit`, en el `<form>`. Y «esto o nada» se escribe con `&&`.">
+                        <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                        <script type="text/x-jsx">
+                            function enviar(e) {
+                                e.[[preventDefault]]();
+                                if (cliente.trim().length < 3) {
+                                    setError("El nombre necesita 3 letras o más.");
+                                    [[return]];
+                                }
+                                setError("");
+                                setEnviado(true);
+                            }
+                            <form [[onSubmit]]={enviar}>
+                                {error !== "" [[&&]] <p className="error">{error}</p>}
+                            </form>
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">onSubmit</span>
+                            <span class="ficha">reload</span>
+                            <span class="ficha">&&</span>
+                            <span class="ficha">preventDefault</span>
+                            <span class="ficha">onClick</span>
+                            <span class="ficha">return</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div class="nota">
+                        <h3>Lo que hace cada pieza</h3>
+                        <p><code class="inline">e.preventDefault()</code> · evita la recarga al enviar.</p>
+                        <p><code class="inline">return</code> · si hay error, la función se corta ahí y no sigue.</p>
+                        <p><code class="inline">onSubmit</code> · va en el <code class="inline">&lt;form&gt;</code>; funciona con clic y con Enter.</p>
+                        <p><code class="inline">disabled={cliente === ""}</code> · da true o false en cada pintado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 8. EL SET NO ES INSTANTÁNEO ===================== -->
+        <section class="slide" id="s-set" data-reto data-emote="advertencia"
+            data-ayuda="Pulsa el botón Cambiar a Kuma y compara la pantalla con la consola."
+            data-nova="Paso 8: una trampa clásica. Esta función cambia el cliente y en la línea siguiente lo imprime. Pulsa «Cambiar a Kuma» y compara la pantalla con la consola."
+            data-nova-fin="El set no cambia la variable en ese instante: le pide a React que vuelva a pintar, y el valor nuevo llega en el siguiente pintado. Si necesitas el dato nuevo ahí mismo, usa lo que le pasaste al set.">
+            <div class="marco">
+                <span class="etiqueta">PASO 8 · EL SET NO ES INSTANTÁNEO</span>
+                <h2>¿Por qué la consola dice el valor viejo?</h2>
+                <div class="dos-col">
+                    <div>
+                        <pre class="codigo" id="st-codigo" data-listo="1"></pre>
+                        <ol class="linea-tiempo oculto" id="st-tiempo">
+                            <li>Empieza <code class="inline">cambiar()</code>: <code class="inline">cliente</code> vale "Nova".</li>
+                            <li><code class="inline">setCliente("Kuma")</code> le pide a React un pintado nuevo.</li>
+                            <li><code class="inline">console.log(cliente)</code> imprime "Nova": la función sigue usando el valor con el que empezó.</li>
+                            <li>La función termina. React pinta otra vez, y en ese pintado <code class="inline">cliente</code> vale "Kuma".</li>
+                        </ol>
+                    </div>
+                    <div class="reto-caja reto-texto tarea" id="reto-st" data-xp="10">
+                        <ol class="pasos"><li>Pulsa <b>Cambiar a Kuma</b>.</li><li>Compara lo que dice la pantalla con lo que dice la consola.</li></ol>
+                        <div class="pantalla">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo columna">
+                                <p class="st-cliente">Cliente: <b id="st-nombre">Nova</b></p>
+                                <button class="btn" id="st-boton" data-guia="clic aquí">Cambiar a Kuma</button>
+                            </div>
+                        </div>
+                        <div class="consola-log" id="st-consola"></div>
+                        <div class="w-quiz reto-caja oculto" id="quiz-st" data-xp="10" style="margin-top:10px">
+                            <p class="w-pregunta">Si <code class="inline">cantidad</code> vale 2 y haces <code class="inline">setCantidad(5); console.log(cantidad);</code>, ¿qué imprime?</p>
+                            <div class="w-opciones tres">
+                                <button class="w-opcion" data-ok>2</button>
+                                <button class="w-opcion" data-pista="Esa es la sorpresa: el set todavía no cambió la variable dentro de esta función.">5</button>
+                                <button class="w-opcion" data-pista="Hay un valor viejo y uno nuevo; mira cuál usa la función mientras corre.">undefined</button>
+                            </div>
+                            <p class="w-explica">Imprime 2. El 5 llega en el siguiente pintado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 9. ÍNDICE ===================== -->
+        <section class="slide" id="s-indice" data-reto data-musica="reto" data-emote="tip"
+            data-ayuda="Pulsa Siguiente en la vitrina hasta pasar la última pieza. Después completa los huecos de la función siguiente y pulsa Comprobar."
+            data-nova="Paso 9: el estado también puede guardar un número que diga qué posición del array mostrar. Esta vitrina muestra `piezas[indice]`. Pulsa Siguiente hasta pasar de la última pieza."
+            data-nova-fin="La vitrina ya da la vuelta. `anterior` es el espejo: si `indice` es 0, salta a `piezas.length - 1`; si no, resta 1. En el ejercicio haces esto con las canciones de tu Mixtape.">
+            <div class="marco">
+                <span class="etiqueta">PASO 9 · UN ÍNDICE EN EL ESTADO</span>
+                <h2>La pieza del día</h2>
+                <div class="col-ancha">
+                    <div class="col-der">
+                        <div class="reto-caja reto-texto tarea" id="reto-ix" data-xp="10" style="margin:0">
+                            <ol class="pasos"><li>Pulsa <b>Siguiente</b> en la vitrina hasta pasar la última pieza.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo columna">
+                                    <div class="vitrina" id="ix-vitrina"></div>
+                                    <div class="vitrina-botones">
+                                        <button class="btn btn-sec boton-icono" id="ix-anterior" aria-label="Anterior"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 5h2v14H6zM20 5v14L9 12z" fill="currentColor"/></svg></button>
+                                        <span class="vitrina-indice" id="ix-indice">indice = 0</span>
+                                        <button class="btn boton-icono" id="ix-siguiente" aria-label="Siguiente" data-guia="pulsa Siguiente"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M16 5h2v14h-2zM4 5v14l11-7z" fill="currentColor"/></svg></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="consola-log error oculto" id="ix-consola">TypeError: Cannot read properties of undefined (reading 'nombre')</div>
+                        </div>
+                    </div>
+                    <div class="col-izq">
+                        <pre class="codigo" id="ix-codigo" data-listo="1"></pre>
+                        <div class="w-huecos reto-caja oculto" id="huecos-ix" data-xp="20" style="margin-top:10px"
+                            data-pista="El array va de 0 a `piezas.length - 1`. Si `indice` ya es la última posición, vuelve a `0`. Si no, avanza a `indice + 1`.">
+                            <ol class="pasos"><li>Arregla <code class="inline">siguiente</code>: pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                            <script type="text/x-jsx">
+                                function siguiente() {
+                                    if (indice === [[piezas.length - 1]]) {
+                                        setIndice([[0]]);
+                                    } else {
+                                        setIndice([[indice + 1]]);
+                                    }
+                                }
+                            </script>
+                            <div class="fichas">
+                                <span class="ficha">indice + 1</span>
+                                <span class="ficha">piezas.length</span>
+                                <span class="ficha">0</span>
+                                <span class="ficha">piezas.length - 1</span>
+                                <span class="ficha">1</span>
+                            </div>
+                            <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== MINI RETO 1: EVENTOS ===================== -->
+        <section class="slide" id="s-match" data-reto data-musica="reto" data-emote="tip"
+            data-nova="Mini reto final, 1 de 2. No solo los botones tienen eventos: los inputs, los formularios y el audio también. Lleva cada situación a la caja del evento que la escucha."
+            data-nova-fin="Bien. `onEnded` y `onTimeUpdate` son del `<audio>`: los vas a usar en el reproductor del ejercicio. Funcionan igual que `onClick`: reciben una función.">
+            <div class="marco">
+                <span class="etiqueta reto">MINI RETO 1 DE 2</span>
+                <h2>¿Qué evento escucha cada cosa?</h2>
+                <div class="w-clasificar reto-caja" data-xp="15"
+                    data-pista="`onClick`: un clic. `onChange`: cambia lo escrito. `onSubmit`: se envía un formulario. `onEnded`: termina el audio. `onTimeUpdate`: el audio avanza mientras suena.">
+                    <ol class="pasos"><li>Haz clic en una situación y luego en la caja de su evento. También puedes arrastrarla.</li><li>Cuando estén todas, pulsa <b>Comprobar</b>.</li></ol>
+                    <div class="clasif-pool">
+                        <span class="item" data-cat="click">Pulsan el botón +1</span>
+                        <span class="item" data-cat="change">Escriben en el buscador</span>
+                        <span class="item" data-cat="submit">Envían el pedido</span>
+                        <span class="item" data-cat="ended">Termina una canción</span>
+                        <span class="item" data-cat="time">La canción avanza mientras suena</span>
+                    </div>
+                    <div class="cubos cinco">
+                        <div class="cubo" data-cat="click"><h4>onClick</h4><div class="cubo-zona"></div></div>
+                        <div class="cubo" data-cat="change"><h4>onChange</h4><div class="cubo-zona"></div></div>
+                        <div class="cubo" data-cat="submit"><h4>onSubmit</h4><div class="cubo-zona"></div></div>
+                        <div class="cubo" data-cat="ended"><h4>onEnded</h4><div class="cubo-zona"></div></div>
+                        <div class="cubo" data-cat="time"><h4>onTimeUpdate</h4><div class="cubo-zona"></div></div>
+                    </div>
+                    <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== MINI RETO 2: CAZA-BUGS ===================== -->
+        <section class="slide" id="s-bugs" data-reto data-musica="reto" data-emote="advertencia"
+            data-nova="Mini reto final, 2 de 2. Tres fragmentos, cada uno con un error. Haz clic en la línea que está mal. Son los fallos que más vas a encontrar esta semana."
+            data-nova-fin="Tres bugs menos. Si algo falla en el ejercicio, revisa esta lista primero: funciones sin paréntesis en los eventos, estados que solo cambian con su set y `value` siempre con `onChange`.">
+            <div class="marco">
+                <span class="etiqueta reto">MINI RETO 2 DE 2</span>
+                <h2>Caza-bugs</h2>
+                <p class="w-ayuda" style="margin:0 0 8px">Haz clic en la línea que tiene el error (con teclado: Tab y Enter). Si fallas, la pista te dice por qué esa línea está bien.</p>
+                <div class="bug-grid tres-bugs">
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Mira cómo se le pasa la función al evento.">
+                        <p class="w-pregunta">1 · Se cuelga con "Too many re-renders"</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">const [reservada, setReservada] = useState(false);</div>
+                            <div class="bug-linea" data-bug>&lt;button onClick={setReservada(!reservada)}&gt;</div>
+                            <div class="bug-linea">    Reservar</div>
+                            <div class="bug-linea">&lt;/button&gt;</div>
+                        </div>
+                        <p class="w-explica">Con paréntesis, el set se ejecuta al pintar, cambia el estado, React vuelve a pintar y se repite sin fin. Va en una arrow: <code class="inline">onClick={() =&gt; setReservada(!reservada)}</code>.</p>
+                    </div>
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Fíjate cómo se intenta cambiar el estado.">
+                        <p class="w-pregunta">2 · El contador no se mueve</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">const [cantidad, setCantidad] = useState(0);</div>
+                            <div class="bug-linea">function sumar() {</div>
+                            <div class="bug-linea" data-bug>    cantidad = cantidad + 1;</div>
+                            <div class="bug-linea">}</div>
+                        </div>
+                        <p class="w-explica">Un estado solo cambia con su set: <code class="inline">setCantidad(cantidad + 1)</code>. Además, <code class="inline">cantidad</code> es <code class="inline">const</code> y asignarle da error.</p>
+                    </div>
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Revisa qué le falta al input para poder escribir.">
+                        <p class="w-pregunta">3 · No se puede escribir</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">const [busqueda, setBusqueda] = useState("");</div>
+                            <div class="bug-linea">&lt;input</div>
+                            <div class="bug-linea">    type="text"</div>
+                            <div class="bug-linea" data-bug>    value={busqueda}</div>
+                            <div class="bug-linea">/&gt;</div>
+                        </div>
+                        <p class="w-explica">Falta <code class="inline">onChange</code>. Sin él nadie cambia el estado y el input se queda congelado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== COMPLETO ===================== -->
+        <section class="slide" id="s-completo" data-emote="celebra"
+            data-nova="Esta es la tarjeta `Pieza` completa, con todo lo que le fuiste sumando, y el catálogo con el buscador. Todo funciona: prueba los botones y el buscador. Sigue cuando quieras.">
+            <div class="marco">
+                <span class="etiqueta">TU COMPONENTE</span>
+                <h2>El catálogo del Taller de Nova, vivo</h2>
+                <div class="col-ancha">
+                    <pre class="codigo codigo-chico" id="completo-codigo" data-listo="1"></pre>
+                    <div class="pantalla">
+                        <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                        <div class="pantalla-cuerpo columna">
+                            <input type="text" class="buscador" id="completo-buscador" placeholder="Buscar pieza..." aria-label="Buscar pieza">
+                            <div class="completo-grilla" id="completo-pantalla"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== FINAL ===================== -->
+        <section class="slide" id="s-final" data-final data-emote="celebra"
+            data-nova="¡Misión completa! En el ejercicio aplicas esto a tu Mixtape: el reproductor recuerda si está sonando, qué canción va y cuánto lleva, con `useState` y eventos. Si algo no quedó claro, toca el paso en la lista.">
+            <div class="marco final">
+                <span class="etiqueta">MISIÓN COMPLETA</span>
+                <h2>Interfaces que Cobran Vida</h2>
+                <div class="final-estrellas"></div>
+                <div class="final-xp"></div>
+                <p class="mini-ayuda" style="margin:2px 0 0">Tiempo: <b data-tiempo-final>0:00</b></p>
+                <a class="btn" href="../../index.html" style="text-decoration:none;display:inline-block;margin-top:10px">← Volver al hangar</a>
+                <p class="receta-titulo">Tu lista de repaso para el ejercicio de la semana</p>
+                <div class="checklist">
+                    <div title="Volver a este paso" data-ir="s-eventos">1 · Eventos en la etiqueta y en camelCase, sin paréntesis: <code class="inline">onClick={agregar}</code>.</div>
+                    <div title="Volver a este paso" data-ir="s-variable">2 · Una variable normal cambia pero no repinta.</div>
+                    <div title="Volver a este paso" data-ir="s-usestate">3 · <code class="inline">const [algo, setAlgo] = useState(inicial)</code>. Para alternar: <code class="inline">setActivo(!activo)</code>.</div>
+                    <div title="Volver a este paso" data-ir="s-copias">4 · Cada copia tiene su propio estado. Props llegan del padre; el estado vive adentro.</div>
+                    <div title="Volver a este paso" data-ir="s-input">5 · Input controlado: <code class="inline">value</code> y <code class="inline">onChange</code> siempre juntos.</div>
+                    <div title="Volver a este paso" data-ir="s-form">6 · Formulario: <code class="inline">onSubmit</code>, <code class="inline">e.preventDefault()</code>, <code class="inline">if</code> con <code class="inline">return</code>, error con <code class="inline">&amp;&amp;</code>.</div>
+                    <div title="Volver a este paso" data-ir="s-set">7 · El set no cambia la variable en la misma línea: llega en el siguiente pintado.</div>
+                    <div title="Volver a este paso" data-ir="s-indice">8 · Índice en el estado: desde <code class="inline">length - 1</code> se vuelve a 0. El audio usa <code class="inline">onEnded</code> y <code class="inline">onTimeUpdate</code>.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="nova-dock">
+        <div class="nova-retrato"></div>
+        <div class="nova-globo"><b>NOVA</b><p class="nova-texto"></p></div>
+        <div class="nav">
+            <button class="btn btn-sec nav-anterior" aria-label="Slide anterior">←</button>
+            <button class="btn btn-sec nav-pista" hidden>Pista</button>
+            <button class="btn nav-siguiente">Siguiente →</button>
+        </div>
+    </footer>
+</div>
+
+<script src="../../assets/vendor/three.min.js"></script>
+<script src="../../assets/js/fondo-espacio.js"></script>
+<script src="../../assets/js/audio.js"></script>
+<script src="../../assets/js/motor.js"></script>
+<script src="../../assets/js/guia.js"></script>
+<script src="mision.js"></script>
+</body>
+</html>

@@ -4,6 +4,8 @@
 //  - Un globito amarillo señala el siguiente clic (ficha, hueco, caja, botón Comprobar
 //    o cualquier elemento con data-guia="texto" dentro de un reto).
 //  - Si el estudiante hace muchos clics seguidos, Nova lo frena y la guía se ve más fuerte.
+//  - Si se queda quieto un rato o hace clic donde no hay nada que tocar, Nova le recuerda
+//    qué hacer (el texto de data-ayuda de la slide) y el brillo se intensifica.
 //  No necesita configuración: lee las clases que ya usa el motor (.tarea, .hecha, .elegida).
 // ============================================================
 var Guia = (function () {
@@ -11,8 +13,19 @@ var Guia = (function () {
     var VENTANA_MS = 3000;       // ...dentro de esta ventana disparan el aviso
     var ENFRIAMIENTO_MS = 25000; // mínimo entre avisos
     var ERRORES_AVISO = 3;       // errores en un mismo reto antes de reforzar la guía
+    var INACTIVO_MS = 22000;     // sin tocar nada durante este tiempo, con un reto pendiente, Nova ayuda
+    var REPETIR_INACTIVO_MS = 45000;
+    var FALLIDOS_AVISO = 3;      // clics donde no hay nada que tocar...
+    var FALLIDOS_VENTANA_MS = 6000; // ...dentro de esta ventana
+
+    // Lo que se puede tocar dentro de una slide. Un clic fuera de esto no hace nada.
+    var TOCABLE = "button, a, input, label, select, textarea, summary, .ficha, .item, .hueco, .cubo-zona, .clasif-pool, .linea, .bug-linea, .w-opcion, [data-guia], [data-ir], [role=button], [tabindex='0'], .nova-globo";
 
     var clics = [];
+    var fallidos = [];
+    var ultimaActividad = Date.now();
+    var ultimoAvisoInactivo = 0;
+    var slideAnterior = null;
     var ultimoAviso = 0;
     var avisadosPorErrores = {};
     var flecha = null;
@@ -117,6 +130,7 @@ var Guia = (function () {
             if (!slide || !slide.contains(n)) { n.classList.remove("reto-activo", "reto-espera"); n.removeAttribute("data-orden"); }
         });
         if (!slide) { ponerFlecha(null); return; }
+        if (slide !== slideAnterior) { slideAnterior = slide; ultimaActividad = Date.now(); ultimoAvisoInactivo = 0; fallidos = []; }
 
         var todos = retosDe(slide);
         var activo = retoActivo(slide);
@@ -162,6 +176,20 @@ var Guia = (function () {
         // Los botones de navegación y de sonido no cuentan
         if (e.target.closest && e.target.closest(".nav, .hud, .nova-globo")) return;
         var ahora = Date.now();
+
+        // Clic donde no hay nada que tocar (texto, código, fondo de la slide)
+        var enEscenario = e.target.closest && e.target.closest(".escenario");
+        if (enEscenario && !e.target.closest(TOCABLE)) {
+            fallidos.push(ahora);
+            fallidos = fallidos.filter(function (t) { return ahora - t <= FALLIDOS_VENTANA_MS; });
+            if (fallidos.length >= FALLIDOS_AVISO && ahora - ultimoAviso > ENFRIAMIENTO_MS) {
+                ultimoAviso = ahora;
+                fallidos = [];
+                reforzar("Ahí no hay nada que tocar, cadete. Lo siguiente brilla en amarillo y el globito te dice qué hacer.");
+                return;
+            }
+        }
+
         clics.push(ahora);
         clics = clics.filter(function (t) { return ahora - t <= VENTANA_MS; });
         if (clics.length >= UMBRAL_CLICS && ahora - ultimoAviso > ENFRIAMIENTO_MS) {
@@ -170,6 +198,21 @@ var Guia = (function () {
             reforzar("Con calma, cadete. Un paso a la vez: sigue el brillo amarillo, ahí va el siguiente clic. Los pasos del reto están numerados.");
         }
     }
+
+    // Sin tocar nada durante un rato, con un reto pendiente: Nova repite qué hay que hacer
+    function revisarInactividad() {
+        var slide = slideActiva();
+        if (!slide || !retoActivo(slide)) return;
+        var ahora = Date.now();
+        if (ahora - ultimaActividad < INACTIVO_MS) return;
+        if (ultimoAvisoInactivo && ahora - ultimoAvisoInactivo < REPETIR_INACTIVO_MS) return;
+        ultimoAvisoInactivo = ahora;
+        ultimoAviso = ahora;
+        var ayuda = slide.dataset.ayuda;
+        reforzar(ayuda ? "¿Te perdiste? " + ayuda : "¿Te perdiste? Sigue el brillo amarillo: ahí va el siguiente clic. Los pasos del reto están numerados.");
+    }
+
+    function marcarActividad() { ultimaActividad = Date.now(); }
 
     function iniciar() {
         var escenario = document.querySelector(".escenario");
@@ -186,6 +229,10 @@ var Guia = (function () {
         escenario.addEventListener("scroll", colocarFlecha);
         window.addEventListener("resize", colocarFlecha);
         setInterval(colocarFlecha, 150);
+        ["pointerdown", "keydown", "input", "wheel"].forEach(function (ev) {
+            document.addEventListener(ev, marcarActividad, true);
+        });
+        setInterval(revisarInactividad, 1000);
         programar();
     }
 

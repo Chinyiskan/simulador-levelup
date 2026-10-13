@@ -96,18 +96,20 @@ body.guia-fuerte .guia-flecha { font-size: 1.1rem; animation-duration: 0.5s; }
 
 /* Pasos numerados dentro de un reto */
 .pasos { list-style: none; counter-reset: paso; margin: 8px 0 0; padding: 0; }
+/* El número va aparte (posición absoluta): así el texto del paso fluye normal aunque lleve <b> o <code> */
 .pasos li {
     counter-increment: paso;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
+    position: relative;
+    padding-left: 34px;
     margin: 6px 0;
     font-size: 1.02rem;
     line-height: 1.4;
 }
 .pasos li::before {
     content: counter(paso);
-    flex: none;
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 24px;
     height: 24px;
     border-radius: 50%;
