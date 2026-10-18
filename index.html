@@ -22,9 +22,27 @@
         .cabecera p { color: var(--texto-suave); font-size: 1.1rem; max-width: 56ch; line-height: 1.5; margin: 0; }
 
         .saludo { display: flex; align-items: flex-end; gap: 14px; }
-        .saludo .retrato { width: 140px; height: 140px; }
-        .saludo .retrato img { width: 140px; height: 140px; object-fit: contain; image-rendering: pixelated; animation: flotar 3s ease-in-out infinite; }
-        .saludo .retrato .img-falta { width: 130px; height: 130px; }
+        /* Mismo monitor que usa Nova dentro de las misiones */
+        .saludo .retrato {
+            position: relative; width: 150px; height: 150px; flex: none;
+            display: grid; place-items: end center; overflow: hidden;
+            border-radius: 14px; border: 3px solid var(--cian);
+            background: radial-gradient(circle at 50% 30%, #2a6a96 0%, #14395c 52%, #0a1a30 100%);
+            box-shadow: 0 0 0 3px #060d1a, 0 0 18px rgba(97, 218, 251, 0.35), inset 0 0 24px rgba(0, 0, 0, 0.45);
+        }
+        .saludo .retrato::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 3px);
+        }
+        .saludo .retrato::before {
+            content: "EN LÍNEA"; position: absolute; top: 6px; left: 8px; z-index: 2; padding-left: 12px;
+            font-family: var(--mono); font-weight: 700; font-size: 0.58rem; letter-spacing: 0.1em; color: #9bf0bd;
+            background: radial-gradient(circle, #4ade80 0 3px, transparent 3.5px) no-repeat left center / 8px 8px;
+            animation: parpadeo-linea 2.4s steps(1) infinite;
+        }
+        @keyframes parpadeo-linea { 0%, 85% { opacity: 1; } 90%, 100% { opacity: 0.45; } }
+        .saludo .retrato img { width: 120%; height: 120%; max-width: none; margin-bottom: -4%; object-fit: contain; object-position: center bottom; image-rendering: pixelated; animation: flotar 3s ease-in-out infinite; }
+        .saludo .retrato .img-falta { width: 120px; height: 120px; position: relative; z-index: 1; align-self: center; }
         .saludo .globo {
             background: #f4f8ff; color: #0b1730; border: 3px solid #0b1730; border-radius: 16px;
             padding: 12px 16px; max-width: 260px; font-weight: 600; box-shadow: 0 6px 0 rgba(0,0,0,.35);
@@ -169,7 +187,7 @@
                     "<h3>" + mi.titulo + "</h3>" +
                     '<div class="tema">' + mi.tema + "</div>" +
                     '<div class="pie">' +
-                    '<span class="estado">' + (abierta ? (estrellas ? "Repetir →" : "Entrar →") : bloq ? "Abre el domingo a las 5 pm" : "Aún no disponible") + "</span>" +
+                    '<span class="estado">' + (abierta ? (estrellas ? "Repetir →" : "Entrar →") : bloq ? "Abre " + horaLocal(abre[mi.ruta.split("/")[1]]) : "Aún no disponible") + "</span>" +
                     (abierta ? '<span class="estrellas" role="img" aria-label="' + estrellas + ' de 3 estrellas">' + htmlEstrellas + "</span>" : "") +
                     "</div>";
                 grilla.appendChild(tarjeta);
@@ -189,10 +207,15 @@
         cont.appendChild(img);
     }
 
-    var bloqueadas = [];
+    var bloqueadas = [], abre = {};
+    // Hora de apertura en la zona del estudiante, p. ej. "el domingo a las 3:00 p. m." (sin fecha)
+    function horaLocal(iso) {
+        var d = new Date(iso);
+        return "el " + d.toLocaleDateString("es", { weekday: "long" }) + " a las " + d.toLocaleTimeString("es", { hour: "numeric", minute: "2-digit" });
+    }
     fetch("/api/estado")
         .then(function (r) { return r.json(); })
-        .then(function (e) { bloqueadas = e.bloqueadas || []; })
+        .then(function (e) { bloqueadas = e.bloqueadas || []; abre = e.abre || {}; })
         .catch(function () {})
         .then(pintarModulos);
     pintarNova();

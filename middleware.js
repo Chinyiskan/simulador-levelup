@@ -34,7 +34,8 @@ export default async function middleware(req) {
 
   if (ruta === "/api/estado") {
     const profe = await esProfe(req);
-    return json({ profe, bloqueadas: profe ? [] : Object.keys(ABRE).filter(bloqueada) });
+    const bloqueadas = profe ? [] : Object.keys(ABRE).filter(bloqueada);
+    return json({ profe, bloqueadas, abre: Object.fromEntries(bloqueadas.map((c) => [c, ABRE[c]])) });
   }
 
   if (ruta === "/api/profe" && req.method === "POST") {

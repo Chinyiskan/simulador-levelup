@@ -30,7 +30,7 @@
     <div class="caja">
         <div class="retrato"><img src="assets/img/nova/nova_advertencia.webp" alt=""></div>
         <h1>Lección bloqueada hasta la clase</h1>
-        <p>Esta misión abre el domingo a las 5 pm. Mientras tanto puedes repasar las misiones anteriores.</p>
+        <p>Esta misión abre <span id="cuando">el domingo a las 5 pm (hora de Colombia)</span>. Mientras tanto puedes repasar las misiones anteriores.</p>
         <a class="volver" href="/">Volver a las misiones</a>
 
         <form class="profe" id="form" autocomplete="off">
@@ -44,6 +44,13 @@
     </div>
 </div>
 <script>
+    // Muestra la hora de apertura en la zona del estudiante (la más próxima si hay varias bloqueadas)
+    fetch("/api/estado").then(function (r) { return r.json(); }).then(function (e) {
+        var f = Object.keys(e.abre || {}).map(function (k) { return new Date(e.abre[k]); }).sort(function (a, b) { return a - b; })[0];
+        if (!f) return;
+        document.getElementById("cuando").textContent = "el " + f.toLocaleDateString("es", { weekday: "long" }) + " a las " + f.toLocaleTimeString("es", { hour: "numeric", minute: "2-digit" });
+    }).catch(function () {});
+
     var form = document.getElementById("form");
     form.addEventListener("submit", function (e) {
         e.preventDefault();
