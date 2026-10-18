@@ -100,7 +100,7 @@
 
     <div id="modulos"></div>
 
-    <p class="pie-pagina">Tu progreso (las estrellas) se guarda solo en este navegador.</p>
+    <p class="pie-pagina">Tu progreso (las estrellas) se guarda solo en este navegador. <a href="bloqueada.html" style="color:inherit;opacity:.6">Soy profe</a></p>
 </div>
 
 <script>
@@ -151,9 +151,11 @@
             grilla.className = "semanas";
 
             m.misiones.forEach(function (mi) {
-                var abierta = !!mi.ruta;
+                // La lista de bloqueadas la manda el servidor (middleware.js); aqui solo se pinta.
+                var bloq = !!mi.ruta && bloqueadas.indexOf(mi.ruta.split("/")[1]) >= 0;
+                var abierta = !!mi.ruta && !bloq;
                 var tarjeta = document.createElement(abierta ? "a" : "div");
-                tarjeta.className = "semana " + (abierta ? "abierta" : "cerrada") + (mi.nueva && !progreso[mi.id] ? " nueva" : "");
+                tarjeta.className = "semana " + (abierta ? "abierta" : "cerrada") + (mi.nueva && !progreso[mi.id] && !bloq ? " nueva" : "");
                 if (abierta) tarjeta.href = mi.ruta;
                 tarjeta.style.animationDelay = retraso + "s";
                 retraso += 0.06;
@@ -167,7 +169,7 @@
                     "<h3>" + mi.titulo + "</h3>" +
                     '<div class="tema">' + mi.tema + "</div>" +
                     '<div class="pie">' +
-                    '<span class="estado">' + (abierta ? (estrellas ? "Repetir →" : "Entrar →") : "Aún no disponible") + "</span>" +
+                    '<span class="estado">' + (abierta ? (estrellas ? "Repetir →" : "Entrar →") : bloq ? "Abre el domingo a las 5 pm" : "Aún no disponible") + "</span>" +
                     (abierta ? '<span class="estrellas" role="img" aria-label="' + estrellas + ' de 3 estrellas">' + htmlEstrellas + "</span>" : "") +
                     "</div>";
                 grilla.appendChild(tarjeta);
@@ -187,7 +189,12 @@
         cont.appendChild(img);
     }
 
-    pintarModulos();
+    var bloqueadas = [];
+    fetch("/api/estado")
+        .then(function (r) { return r.json(); })
+        .then(function (e) { bloqueadas = e.bloqueadas || []; })
+        .catch(function () {})
+        .then(pintarModulos);
     pintarNova();
 </script>
 <script src="assets/vendor/three.min.js"></script>

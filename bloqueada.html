@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Lección bloqueada · Simulador del Hangar</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 6c14 14 18 32 18 52l14 18v8l-18-4-14 14-14-14-18 4v-8l14-18c0-20 4-38 18-52z' fill='%2361dafb'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="assets/css/fuentes.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <style>
+        .centro { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 28px; }
+        .caja { max-width: 560px; width: 100%; background: rgba(10, 20, 40, 0.9); border: 2px solid #2c5f8a; border-radius: 18px; padding: 28px; }
+        .caja .retrato { float: right; width: 120px; height: 120px; margin: 0 0 8px 16px; }
+        .caja .retrato img { width: 120px; height: 120px; object-fit: contain; image-rendering: pixelated; }
+        .caja h1 { font-size: 2rem; color: var(--cian); margin: 0 0 10px; line-height: 1.1; }
+        .caja p { color: var(--texto-suave); font-size: 1.05rem; line-height: 1.5; margin: 0 0 14px; }
+        .profe { clear: both; border-top: 1px solid var(--borde); padding-top: 16px; margin-top: 8px; }
+        .profe label { display: block; font-weight: 700; margin-bottom: 8px; }
+        .profe .fila { display: flex; gap: 10px; }
+        .profe input { flex: 1; font: inherit; padding: 10px 12px; border-radius: 10px; border: 2px solid var(--borde); background: #08111f; color: var(--texto); }
+        .profe button { font: inherit; font-family: var(--pixel); padding: 10px 18px; border-radius: 10px; border: 0; background: var(--cian); color: #04121f; cursor: pointer; }
+        .profe button:disabled { opacity: .6; cursor: wait; }
+        #error { color: #ff8a8a; min-height: 1.4em; margin: 8px 0 0; font-size: .95rem; }
+        .volver { display: inline-block; margin-top: 10px; color: var(--cian); }
+    </style>
+</head>
+<body>
+<div class="capa centro">
+    <div class="caja">
+        <div class="retrato"><img src="assets/img/nova/nova_advertencia.webp" alt=""></div>
+        <h1>Lección bloqueada hasta la clase</h1>
+        <p>Esta misión abre el domingo a las 5 pm. Mientras tanto puedes repasar las misiones anteriores.</p>
+        <a class="volver" href="/">Volver a las misiones</a>
+
+        <form class="profe" id="form" autocomplete="off">
+            <label for="clave">Si eres profe, ingresa aquí</label>
+            <div class="fila">
+                <input id="clave" type="password" placeholder="Contraseña" required>
+                <button type="submit">Entrar</button>
+            </div>
+            <p id="error" role="alert"></p>
+        </form>
+    </div>
+</div>
+<script>
+    var form = document.getElementById("form");
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var btn = form.querySelector("button"), err = document.getElementById("error");
+        btn.disabled = true; err.textContent = "";
+        fetch("/api/profe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ clave: document.getElementById("clave").value }) })
+            .then(function (r) {
+                if (r.ok) { location.href = "/"; return; }
+                err.textContent = "Contraseña incorrecta.";
+                btn.disabled = false;
+            })
+            .catch(function () { err.textContent = "No se pudo comprobar. Intenta de nuevo."; btn.disabled = false; });
+    });
+</script>
+</body>
+</html>
