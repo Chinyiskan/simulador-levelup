@@ -193,7 +193,6 @@
 .cubos.cinco .cubo { padding: 8px; }
 .cubos.cinco .cubo h4 { font-family: var(--mono); font-size: 0.92rem; color: var(--cian); }
 .cubos.cinco .cubo-zona { min-height: 70px; }
-#s-match .item { font-family: var(--cuerpo); font-weight: 700; font-size: 0.92rem; }
 
 /* Caza-bugs con tres fragmentos */
 .bug-grid.tres-bugs { grid-template-columns: 1.15fr 1fr 1fr; }

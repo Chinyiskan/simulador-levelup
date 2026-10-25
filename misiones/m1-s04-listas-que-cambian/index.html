@@ -37,7 +37,7 @@
                 <h1>Listas que Cambian</h1>
                 <p class="lead">El Taller de Nova guarda sus pedidos en una lista que cambia: se agregan, se quitan y se marcan como listos, y varios componentes la comparten.</p>
                 <ol class="ruta" aria-label="Pasos de la misión">
-                    <li>El problema</li><li>Agregar</li><li>Borrar</li><li>Marcar</li><li>Valor calculado</li><li>Estado compartido</li><li>Lifting state up</li><li>El recorrido</li>
+                    <li>El problema</li><li>Agregar</li><li>Borrar</li><li>Marcar</li><li>Valor calculado</li><li>Estado compartido</li><li>Lifting state up</li>
                 </ol>
                 <div class="portada-datos">
                     <div class="dato"><b>20–25 min</b><span>tiempo sugerido (el reloj de arriba cuenta)</span></div>
@@ -459,67 +459,7 @@
             </div>
         </section>
 
-        <!-- ===================== 8. RECORRIDO ===================== -->
-        <section class="slide" id="s-ruta" data-reto data-musica="reto" data-emote="tip"
-            data-ayuda="Arrastra las líneas, o haz clic en una y luego en otra para intercambiarlas. Después pulsa Comprobar."
-            data-nova="Cierre del recorrido: el camino completo de un pedido nuevo. Ordena los cuatro pasos de arriba abajo, desde que `Taller` define `agregar` hasta que la lista se repinta."
-            data-nova-fin="Ese es el ciclo que vas a repetir en el Mixtape: el hijo avisa, el padre cambia el estado y los hijos reciben la lista nueva por props.">
-            <div class="marco">
-                <span class="etiqueta">PASO 8 · CIERRE DEL RECORRIDO</span>
-                <h2>Qué pasa cuando alguien pulsa Pedir</h2>
-                <div class="col-ancha">
-                    <div class="w-ordenar reto-caja" data-xp="15"
-                        data-pista="Todo empieza cuando Taller le da la función al formulario. Después el usuario envía, la función corre en el padre y al final se repinta la lista.">
-                        <ol class="pasos"><li>Arrastra las líneas, o haz clic en una y luego en otra para intercambiarlas.</li><li>Pulsa <b>Comprobar</b>.</li></ol>
-                        <ol class="lineas lineas-texto">
-                            <li class="linea" data-pos="1">Taller le pasa agregar a PedidoPieza en onAgregar</li>
-                            <li class="linea" data-pos="2">El usuario pulsa Pedir y PedidoPieza llama onAgregar(...)</li>
-                            <li class="linea" data-pos="3">agregar corre en Taller y llama a setPedidos con el array nuevo</li>
-                            <li class="linea" data-pos="4">Taller se repinta y le pasa pedidos a ListaPedidos</li>
-                        </ol>
-                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
-                    </div>
-                    <div class="arbol" aria-label="Taller contiene a PedidoPieza y a ListaPedidos">
-                        <div class="arbol-nodo padre"><b>Taller</b><span>dueño de <code class="inline">pedidos</code></span></div>
-                        <div class="arbol-ramas">
-                            <div class="arbol-nodo"><b>PedidoPieza</b><span class="sube">sube: <code class="inline">onAgregar(...)</code></span></div>
-                            <div class="arbol-nodo"><b>ListaPedidos</b><span class="baja">baja: <code class="inline">pedidos</code></span></div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===================== MINI RETO 1 ===================== -->
-        <section class="slide" id="s-match" data-reto data-musica="reto" data-emote="tip"
-            data-ayuda="Haz clic en una expresión y luego en la caja que le corresponde. Cuando estén todas, pulsa Comprobar."
-            data-nova="Mini reto final, 1 de 2. Algunos métodos cambian el array en su lugar y otros devuelven uno nuevo; con el estado sirven los segundos. `splice` quita elementos por posición y `sort` ordena. Clasifica las seis expresiones."
-            data-nova-fin="`push`, `splice` y `sort` cambian el array original. Spread, `filter` y `map` devuelven uno nuevo. Si necesitas ordenar, copia antes: `[...pedidos].sort(...)`.">
-            <div class="marco">
-                <span class="etiqueta reto">MINI RETO 1 DE 2</span>
-                <h2>¿Cambia el array o devuelve uno nuevo?</h2>
-                <div class="w-clasificar reto-caja" data-xp="15"
-                    data-pista="`push`, `splice` y `sort` modifican el array que ya existe. Spread, `filter` y `map` devuelven un array nuevo y dejan el original igual.">
-                    <ol class="pasos" style="display:flex;gap:18px;margin-bottom:2px"><li>Haz clic en una expresión y luego en la caja de su grupo.</li><li>Cuando estén todas, pulsa <b>Comprobar</b>.</li></ol>
-                    <div class="clasif-pool">
-                        <span class="item" data-cat="cambia">pedidos.push(nuevo)</span>
-                        <span class="item" data-cat="nuevo">[...pedidos, nuevo]</span>
-                        <span class="item" data-cat="cambia">pedidos.splice(1, 1)</span>
-                        <span class="item" data-cat="nuevo">pedidos.filter(...)</span>
-                        <span class="item" data-cat="cambia">pedidos.sort(...)</span>
-                        <span class="item" data-cat="nuevo">pedidos.map(...)</span>
-                    </div>
-                    <div class="cubos">
-                        <div class="cubo" data-cat="cambia"><h4>Cambia el array en su lugar</h4><div class="cubo-zona"></div></div>
-                        <div class="cubo" data-cat="nuevo"><h4>Devuelve un array nuevo</h4><div class="cubo-zona"></div></div>
-                    </div>
-                    <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===================== MINI RETO 2: CAZA-BUGS ===================== -->
+        <!-- ===================== MINI RETO: CAZA-BUGS ===================== -->
         <section class="slide" id="s-bugs" data-reto data-musica="reto" data-emote="advertencia"
             data-ayuda="En cada fragmento, haz clic en la línea que tiene el error."
             data-nova="Mini reto final, 2 de 2. Tres fragmentos, cada uno con un error. Haz clic en la línea que está mal. Son los fallos que más vas a encontrar esta semana."
@@ -611,8 +551,7 @@
                     <div title="Volver a este paso" data-ir="s-marcar">4 · Marcar: <code class="inline">map</code> con <code class="inline">{ ...p, listo: !p.listo }</code>.</div>
                     <div title="Volver a este paso" data-ir="s-calculado">5 · Lo que sale del estado se calcula, sin otro <code class="inline">useState</code>.</div>
                     <div title="Volver a este paso" data-ir="s-comparte">6 · Dos hermanos no comparten estado: sube al padre.</div>
-                    <div title="Volver a este paso" data-ir="s-lifting">7 · El hijo recibe una función <code class="inline">on...</code> por props y la llama.</div>
-                    <div title="Volver a este paso" data-ir="s-ruta">8 · El hijo avisa, el padre hace el <code class="inline">set</code> y la lista baja por props.</div>
+                    <div title="Volver a este paso" data-ir="s-lifting">7 · El hijo llama la función <code class="inline">on...</code> que recibió por props; el padre hace el <code class="inline">set</code> y la lista baja por props.</div>
                 </div>
             </div>
         </section>
