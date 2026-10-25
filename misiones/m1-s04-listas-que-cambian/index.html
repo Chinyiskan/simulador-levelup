@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Listas que Cambian · Simulador</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2361dafb' stroke-width='16' stroke-dasharray='18 8'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%2361dafb'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="../../assets/css/fuentes.css">
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/mision.css">
+    <link rel="stylesheet" href="../../assets/css/guia.css">
+    <link rel="stylesheet" href="mision.css">
+</head>
+<body class="mision" data-raiz="../../">
+<div id="fondo-espacio"></div>
+<a class="saltar" href="#escenario">Saltar al contenido</a>
+<div class="aviso-pantalla">La ventana es muy angosta. Agrándala o ponla en pantalla completa para jugar la misión.</div>
+
+<div class="capa app">
+    <header class="hud">
+        <a class="hud-volver" href="../../index.html">← Hangar</a>
+        <div class="hud-titulo">Listas que Cambian <small>Módulo 1 · Semana 4</small></div>
+        <div class="hud-progreso"><div class="hud-barra"><span></span></div><span class="hud-paso">1 / 14</span></div>
+        <div class="hud-xp"><b>0</b> XP</div>
+        <button class="hud-sonido" title="Sonido (efectos y música)" aria-label="Silenciar todo el sonido"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.8a9 9 0 0 1 0 12.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button class="hud-musica" title="Música de fondo" aria-label="Encender la música"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 17V5l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="2.7" fill="currentColor"/><circle cx="17.5" cy="15.5" r="2.7" fill="currentColor"/></svg></button>
+        <input class="hud-vol" type="range" min="0" max="50" value="14" title="Volumen de la música" aria-label="Volumen de la música">
+    </header>
+
+    <main class="escenario" id="escenario" tabindex="-1">
+
+        <!-- ===================== PORTADA ===================== -->
+        <section class="slide" id="s-portada" data-emote="hola"
+            data-nova="Cadete, el taller ya recibe pedidos, pero se pierden apenas llegan. Hoy armamos la cola de pedidos: agregar, quitar y marcar sin romper el estado. Avanza con el botón o con la flecha →.">
+            <div class="portada">
+                <div class="mision-num">MÓDULO 1 · SEMANA 4</div>
+                <h1>Listas que Cambian</h1>
+                <p class="lead">El Taller de Nova guarda sus pedidos en una lista que cambia: se agregan, se quitan y se marcan como listos, y varios componentes la comparten.</p>
+                <ol class="ruta" aria-label="Pasos de la misión">
+                    <li>El problema</li><li>Agregar</li><li>Borrar</li><li>Marcar</li><li>Valor calculado</li><li>Estado compartido</li><li>Lifting state up</li><li>El recorrido</li>
+                </ol>
+                <div class="portada-datos">
+                    <div class="dato"><b>20–25 min</b><span>tiempo sugerido (el reloj de arriba cuenta)</span></div>
+                    <div class="dato"><b><span data-total-retos>0</span> retos</b><span>para ganar XP</span></div>
+                    <div class="dato"><b>3 ★</b><span>al final según tu XP</span></div>
+                </div>
+                <p class="prereq"><b>Antes de empezar:</b> basta con las semanas 2 y 3 (props, listas, eventos, useState e inputs controlados). El spread, <code class="inline">filter</code> y <code class="inline">map</code> se repasan cuando aparecen.</p>
+                <div class="portada-botones">
+                    <button class="btn" data-siguiente>Empezar →</button>
+                    <button class="btn btn-sec" data-musica-toggle data-texto-off="Encender música (mejor con audífonos)" data-texto-on="Música encendida · apagar" aria-pressed="false">Encender música (mejor con audífonos)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== TUTORIAL ===================== -->
+        <section class="slide" id="s-tutorial" data-reto data-emote="tip"
+            data-ayuda="Pulsa el botón que brilla. Después haz clic en la ficha pedidos, luego en el hueco, y pulsa Comprobar."
+            data-nova="Antes de empezar, un minuto de práctica. Lo que brilla en amarillo es lo siguiente que debes tocar, y el globito amarillo te dice qué hacer. Haz los dos retos de la derecha."
+            data-nova-fin="Eso es todo. En cada reto, sigue el brillo amarillo y los pasos numerados. Si fallas dos veces aparece «Ver solución»; el botón Pista de abajo te repite qué hacer.">
+            <div class="marco">
+                <span class="etiqueta">ANTES DE EMPEZAR · CÓMO SE JUEGA</span>
+                <h2>Calentamiento de un minuto</h2>
+                <div class="dos-col">
+                    <ul class="leyenda">
+                        <li><b class="etq brillo">Brillo amarillo</b><span>Es lo siguiente que debes tocar. El globito te dice qué hacer.</span></li>
+                        <li><b class="etq">RETO 1 DE 2</b><span>Los retos se hacen en orden. El que todavía no toca se ve apagado.</span></li>
+                        <li><b class="etq">Pista</b><span>Botón de abajo a la derecha. Te repite qué hacer en la slide.</span></li>
+                        <li><b class="etq">Ver solución</b><span>Aparece después de dos errores en un reto. Da menos XP.</span></li>
+                        <li><b class="etq">← →</b><span>Las flechas del teclado cambian de slide. «Siguiente» se activa al terminar los retos.</span></li>
+                    </ul>
+                    <div>
+                        <div class="reto-caja reto-texto tarea reto-fila" id="reto-tut-1" data-xp="5" style="margin:0 0 14px">
+                            <ol class="pasos"><li>Pulsa el botón que brilla.</li></ol>
+                            <button class="btn" id="tut-btn" data-guia="clic aquí">Probar el botón</button>
+                        </div>
+                        <div class="w-huecos reto-caja" data-xp="5" data-pista="La ficha correcta es `pedidos`: es la lista que el taller le pasa a la tabla.">
+                            <ol class="pasos">
+                                <li>Haz clic en la ficha <b>pedidos</b> y luego en el hueco. También puedes arrastrarla.</li>
+                                <li>Pulsa <b>Comprobar</b>.</li>
+                            </ol>
+                            <script type="text/x-jsx">
+                                <ListaPedidos pedidos={[[pedidos]]} />
+                            </script>
+                            <div class="fichas">
+                                <span class="ficha">cliente</span>
+                                <span class="ficha">pedidos</span>
+                            </div>
+                            <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 1. EL PROBLEMA ===================== -->
+        <section class="slide" id="s-push" data-reto data-emote="advertencia"
+            data-ayuda="Pulsa «Agregar pedido» dos veces en la pantalla de la derecha. Después responde la pregunta que aparece."
+            data-nova="Paso 1: el taller guarda sus pedidos en un array dentro del estado. Pulsa «Agregar pedido» dos veces y compara la consola con la lista de la pantalla."
+            data-nova-fin="El array sí crece, pero `setPedidos` recibió el mismo array de antes y React no repinta. El estado es de solo lectura: para cambiarlo se arma una copia con el cambio y esa copia va al `set`.">
+            <div class="marco">
+                <span class="etiqueta">PASO 1 · EL PROBLEMA</span>
+                <h2>Cambiar el array en su lugar no repinta</h2>
+                <div class="dos-col">
+                    <div>
+                        <div class="reto-caja reto-texto tarea" id="reto-pu" data-xp="5" style="margin:0">
+                            <ol class="pasos"><li>Pulsa <b>Agregar pedido</b> dos veces.</li><li>Compara la consola con la lista.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo columna">
+                                    <div class="lista-pedidos" id="pu-lista"></div>
+                                    <button class="boton-tarjeta suelto" id="pu-btn" data-guia="pulsa Agregar pedido">Agregar pedido</button>
+                                </div>
+                            </div>
+                            <div class="consola-log" id="pu-consola"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <pre class="codigo codigo-chico" id="pu-codigo" data-listo="1"></pre>
+                        <div class="w-quiz reto-caja oculto" id="quiz-pu" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">La consola dice 3 y la lista muestra 1 pedido. ¿Por qué?</p>
+                            <div class="w-opciones tres">
+                                <button class="w-opcion" data-ok>setPedidos recibió el mismo array y React no repinta</button>
+                                <button class="w-opcion" data-pista="La consola dice 3: el push sí agregó los pedidos al array.">push no agrega nada al array</button>
+                                <button class="w-opcion" data-pista="Sin key React avisaría en la consola, pero igual repintaría. Aquí no hay repintado.">Falta una key en el map</button>
+                            </div>
+                            <p class="w-explica">React compara el valor nuevo con el anterior. Es el mismo array (misma referencia): no hay cambio y no repinta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 2. AGREGAR ===================== -->
+        <section class="slide" id="s-agregar" data-reto data-emote="recuerda"
+            data-ayuda="Completa los dos huecos con las fichas y pulsa Comprobar. Después pulsa «Agregar pedido» hasta que la lista tenga 3 y responde la pregunta."
+            data-nova="Paso 2: agregar. En vez de `push`, armamos un array nuevo: copiamos los pedidos de antes con spread y ponemos el nuevo al final. Completa los huecos."
+            data-nova-fin="`[...pedidos, nuevo]` es un array nuevo: el spread saca los pedidos del anterior y los pone dentro, y `nuevo` queda al final. El array original no se toca. Es el mismo spread de la Fase I.">
+            <div class="marco">
+                <span class="etiqueta">PASO 2 · AGREGAR</span>
+                <h2>Un array nuevo con spread</h2>
+                <div class="col-ancha">
+                    <div>
+                        <div class="w-huecos reto-caja" data-xp="15"
+                        data-pista="Primero se copian los pedidos de antes con `...pedidos` y al final va `nuevo`. Sin los tres puntos, el array anterior entraría como un solo elemento.">
+                        <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                        <script type="text/x-jsx">
+                            function agregar() {
+                                const nuevo = { id: Date.now(), pieza: "Radar",
+                                    cliente: "Kuma", listo: false };
+                                setPedidos([ [[...pedidos]], [[nuevo]] ]);
+                            }
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">nuevo</span>
+                            <span class="ficha">pedidos</span>
+                            <span class="ficha">...pedidos</span>
+                            <span class="ficha">...nuevo</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                        <div class="w-quiz reto-caja oculto" id="quiz-ag" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">¿Cómo se escribe el array para que el pedido nuevo quede <b>primero</b>?</p>
+                            <div class="w-opciones tres">
+                                <button class="w-opcion" data-ok>[nuevo, ...pedidos]</button>
+                                <button class="w-opcion" data-pista="Ese deja el nuevo al final. Para que quede primero, el orden se invierte.">[...pedidos, nuevo]</button>
+                                <button class="w-opcion" data-pista="Sin los tres puntos, el array pedidos entra como un solo elemento dentro del array nuevo.">[nuevo, pedidos]</button>
+                            </div>
+                            <p class="w-explica">El array nuevo se arma en el orden en que escribes los elementos.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="nota" id="ag-nota">
+                            <h3>Cómo se lee</h3>
+                            <p><code class="inline">[...pedidos, nuevo]</code> copia los pedidos que había y suma <code class="inline">nuevo</code> al final.</p>
+                            <p><code class="inline">Date.now()</code> da los milisegundos de este instante. En una app chica, con clics de una persona, sirve de <code class="inline">id</code>. Con datos reales el <code class="inline">id</code> lo asigna la base de datos.</p>
+                        </div>
+                        <div class="reto-caja reto-texto tarea oculto" id="reto-ag" data-xp="5" style="margin:12px 0 0">
+                            <ol class="pasos"><li>Pulsa <b>Agregar pedido</b> hasta que la lista tenga 3 pedidos.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo columna">
+                                    <div class="lista-pedidos" id="ag-lista"></div>
+                                    <button class="boton-tarjeta suelto" id="ag-btn" data-guia="pulsa Agregar pedido">Agregar pedido</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 3. BORRAR ===================== -->
+        <section class="slide" id="s-borrar" data-reto data-emote="advertencia"
+            data-ayuda="Completa los tres huecos y pulsa Comprobar. Después pulsa Quitar en el pedido de Kuma."
+            data-nova="Paso 3: borrar. `filter` devuelve un array nuevo con los pedidos que cumplen la condición. Para quitar uno, pasan todos menos el que tiene ese `id`."
+            data-nova-fin="`p.id !== id` da `false` solo para el pedido que quitas, y ese no entra al array nuevo. Con `===` pasaría al revés: quedaría solo el pedido que querías quitar.">
+            <div class="marco">
+                <span class="etiqueta">PASO 3 · BORRAR</span>
+                <h2><code class="inline">filter</code> devuelve la lista sin el pedido</h2>
+                <div class="col-ancha">
+                    <div class="w-huecos reto-caja" data-xp="15"
+                        data-pista="El método que se queda con los elementos que dan true es `filter`. Para dejar pasar a los demás la condición es `!==`. La función que recibe el id se llama `borrar`.">
+                        <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                        <script type="text/x-jsx">
+                            function borrar(id) {
+                                setPedidos(pedidos.[[filter]]((p) => p.id [[!==]] id));
+                            }
+
+                            <button onClick={() => [[borrar]](p.id)}>
+                                Quitar
+                            </button>
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">map</span>
+                            <span class="ficha">===</span>
+                            <span class="ficha">filter</span>
+                            <span class="ficha">borrar</span>
+                            <span class="ficha">!==</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div>
+                        <div class="reto-caja reto-texto tarea oculto" id="reto-bo" data-xp="5" style="margin:0">
+                            <ol class="pasos"><li>Pulsa <b>Quitar</b> en el pedido de Kuma.</li><li>Si te equivocas, pulsa <b>Reiniciar lista</b>.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo columna">
+                                    <div class="lista-pedidos" id="bo-lista"></div>
+                                    <button class="boton-tarjeta suelto sec" id="bo-reiniciar">Reiniciar lista</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nota" id="bo-nota">
+                            <h3>Cómo lee filter</h3>
+                            <p><code class="inline">filter</code> recorre el array y se queda con los pedidos para los que la función da <code class="inline">true</code>. El array original queda igual.</p>
+                            <p>El botón usa una arrow function para pasarle el <code class="inline">id</code> a <code class="inline">borrar</code>, como en la semana 3.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 4. MARCAR ===================== -->
+        <section class="slide" id="s-marcar" data-reto data-emote="idea"
+            data-ayuda="Completa los dos huecos con las fichas y pulsa Comprobar. Después pulsa «Ya está» en dos pedidos."
+            data-nova="Paso 4: marcar un pedido como listo cambia una propiedad de un objeto que está dentro del array. Hay que copiar los dos niveles: el array con `map` y el pedido con spread."
+            data-nova-fin="`map` devuelve un array nuevo con la misma cantidad de pedidos. Al buscado le entrega una copia con `listo` cambiado y a los demás los deja igual. `p.listo = !p.listo` modificaría el objeto que está en el estado.">
+            <div class="marco">
+                <span class="etiqueta">PASO 4 · MARCAR</span>
+                <h2><code class="inline">map</code> con un objeto copiado</h2>
+                <div class="col-ancha">
+                    <div class="w-huecos reto-caja" data-xp="20"
+                        data-pista="Al pedido buscado le toca una copia: `{ ...p, listo: !p.listo }`. Los demás pedidos pasan sin cambios, es decir, `p`. Asignar `p.listo = ...` modificaría el pedido que está en el estado.">
+                        <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                        <script type="text/x-jsx">
+                            function marcar(id) {
+                                setPedidos(
+                                    pedidos.map((p) =>
+                                        p.id === id ? [[{ ...p, listo: !p.listo }]] : [[p]]
+                                    )
+                                );
+                            }
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">{ p, listo: !p.listo }</span>
+                            <span class="ficha">p</span>
+                            <span class="ficha">{ ...p, listo: !p.listo }</span>
+                            <span class="ficha">p.listo = !p.listo</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div>
+                        <div class="anatomia">
+                            <div class="anatomia-linea"><span class="an-gris">{ </span><span class="an an-valor">...p</span><span class="an-gris">,</span> <span class="an an-set">listo: !p.listo</span><span class="an-gris"> }</span></div>
+                            <ul class="anatomia-etiquetas">
+                                <li><b class="an-valor">...p</b> copia id, pieza, cliente y listo</li>
+                                <li><b class="an-set">listo: !p.listo</b> escribe <code class="inline">listo</code> otra vez y gana la última</li>
+                            </ul>
+                        </div>
+                        <div class="reto-caja reto-texto tarea oculto" id="reto-ma" data-xp="5" style="margin:12px 0 0">
+                            <ol class="pasos"><li>Pulsa <b>Ya está</b> en dos pedidos.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo columna">
+                                    <div class="lista-pedidos" id="ma-lista"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 5. VALOR CALCULADO ===================== -->
+        <section class="slide" id="s-calculado" data-reto data-emote="tip"
+            data-ayuda="Completa los dos huecos con las fichas y pulsa Comprobar. Después responde la pregunta que aparece."
+            data-nova="Paso 5: ¿cuántos pedidos faltan por entregar? No hace falta otro `useState`. Ese número sale de `pedidos` y se calcula en cada pintado. Completa los huecos."
+            data-nova-fin="Si `pendientes` fuera un estado aparte, habría que actualizarlo en agregar, borrar y marcar. Calculado, siempre coincide con la lista. Prueba el panel: marca pedidos y mira el contador.">
+            <div class="marco">
+                <span class="etiqueta">PASO 5 · VALOR CALCULADO</span>
+                <h2>Lo que sale del estado no necesita otro estado</h2>
+                <div class="col-ancha">
+                    <div>
+                        <div class="w-huecos reto-caja" data-xp="15"
+                        data-pista="Los pendientes son los pedidos que NO están listos: `!p.listo`. Se filtran y se cuenta cuántos quedaron con `.length`. `map` conservaría los tres.">
+                        <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                        <script type="text/x-jsx">
+                            const pendientes = pedidos.[[filter]]((p) => [[!p.listo]]).length;
+                            <h3>Pendientes: {pendientes}</h3>
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">map</span>
+                            <span class="ficha">p.listo</span>
+                            <span class="ficha">filter</span>
+                            <span class="ficha">!p.listo</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                        <div class="w-quiz reto-caja oculto" id="quiz-ca" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">Marcas un pedido como listo. ¿Hay que actualizar <code class="inline">pendientes</code> a mano?</p>
+                            <div class="w-opciones tres">
+                                <button class="w-opcion" data-ok>No: se recalcula en el repintado</button>
+                                <button class="w-opcion" data-pista="pendientes no es un estado: no existe un setPendientes.">Sí, con setPendientes</button>
+                                <button class="w-opcion" data-pista="marcar ya llamó a setPedidos. Ese set provoca el repintado que recalcula pendientes.">Sí, con otro setPedidos</button>
+                            </div>
+                            <p class="w-explica">Cada repintado vuelve a ejecutar la línea de <code class="inline">pendientes</code> con la lista nueva.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pantalla oculto" id="ca-panel">
+                            <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                            <div class="pantalla-cuerpo columna">
+                                <h3 class="contador">Pendientes: <b id="ca-num">3</b></h3>
+                                <div class="lista-pedidos" id="ca-lista"></div>
+                            </div>
+                        </div>
+                        <div class="nota" id="ca-nota">
+                            <h3>Un solo dato, cero desfases</h3>
+                            <p>El estado guarda lo mínimo: la lista. Lo que se puede sacar de ella (cuántos faltan, cuántos están listos) se calcula en el cuerpo del componente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 6. ESTADO COMPARTIDO ===================== -->
+        <section class="slide" id="s-comparte" data-reto data-emote="oops"
+            data-ayuda="Pulsa Pedir. Después responde la pregunta que aparece."
+            data-nova="Paso 6: el formulario y la lista son dos componentes y cada uno tiene su propio `pedidos`. Pulsa «Pedir» y mira qué lista se entera."
+            data-nova-fin="Son dos estados distintos: el formulario guardó el pedido en el suyo y la lista no lo ve. Dos componentes hermanos no se leen entre sí, por eso el estado sube al padre que los contiene.">
+            <div class="marco">
+                <span class="etiqueta">PASO 6 · ESTADO COMPARTIDO</span>
+                <h2>Cada componente con su propia lista</h2>
+                <div class="dos-col">
+                    <div>
+                        <div class="reto-caja reto-texto tarea" id="reto-cm" data-xp="5" style="margin:0">
+                            <ol class="pasos"><li>Pulsa <b>Pedir</b>.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo cajas-comp">
+                                    <div class="caja-comp">
+                                        <h4>PedidoPieza</h4>
+                                        <select id="cm-select" aria-label="Pieza">
+                                            <option>Radar de alcance</option>
+                                            <option>Escudo deflector</option>
+                                        </select>
+                                        <button class="boton-tarjeta suelto" id="cm-pedir" data-guia="pulsa Pedir">Pedir</button>
+                                        <p class="caja-dato" id="cm-propios">pedidos.length = 0</p>
+                                    </div>
+                                    <div class="caja-comp">
+                                        <h4>ListaPedidos</h4>
+                                        <p class="caja-dato" id="cm-lista">pedidos.length = 0</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <pre class="codigo codigo-chico" id="cm-codigo" data-listo="1"></pre>
+                        <div class="w-quiz reto-caja oculto" id="quiz-cm" data-xp="10" style="margin-top:12px">
+                            <p class="w-pregunta">¿Dónde debe vivir <code class="inline">pedidos</code> para que el formulario y la lista lo compartan?</p>
+                            <div class="w-opciones tres">
+                                <button class="w-opcion" data-ok>En el padre que contiene a los dos</button>
+                                <button class="w-opcion" data-pista="Un componente no puede leer el estado de su hermano: ese estado es privado.">En PedidoPieza, y la lista lo lee</button>
+                                <button class="w-opcion" data-pista="Una variable normal cambia pero no repinta, como en la semana 3.">En un let fuera de los dos</button>
+                            </div>
+                            <p class="w-explica">El estado sube hasta el padre más cercano que lo necesita.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 7. LIFTING STATE UP ===================== -->
+        <section class="slide" id="s-lifting" data-reto data-emote="recuerda"
+            data-ayuda="Completa los cuatro huecos con las fichas y pulsa Comprobar. Después elige Radar de alcance, escribe un cliente y pulsa Pedir."
+            data-nova="Paso 7: el estado sube a `Taller`. Una función viaja por props como cualquier valor: el hijo la llama cuando pasa algo y el padre hace el `set`. Por convención esas props empiezan con `on`."
+            data-nova-fin="Los datos bajan por props y los avisos suben llamando funciones. Lo que se escribe en el formulario sigue viviendo en `PedidoPieza`: el estado solo sube hasta el padre más cercano que lo necesita.">
+            <div class="marco">
+                <span class="etiqueta">PASO 7 · LIFTING STATE UP</span>
+                <h2>El hijo avisa, el padre cambia el estado</h2>
+                <div class="col-ancha">
+                    <div class="w-huecos reto-caja" data-xp="25"
+                        data-pista="El hijo recibe `onAgregar` y lo llama. El padre le pasa su función `agregar` sin paréntesis (con ellos se ejecutaría al pintar) y le da la lista `pedidos` a ListaPedidos.">
+                        <ol class="pasos"><li>Pon una ficha en cada hueco y pulsa <b>Comprobar</b>.</li></ol>
+                        <script type="text/x-jsx">
+                            function PedidoPieza({ [[onAgregar]] }) {
+                                function enviar() { [[onAgregar]](pieza, cliente); }
+                            }
+                            function Taller() {
+                                const [pedidos, setPedidos] = useState([]);
+                                function agregar(pieza, cliente) {
+                                    const nuevo = { id: Date.now(), pieza, cliente, listo: false };
+                                    setPedidos([...pedidos, nuevo]);
+                                }
+                                return (
+                                    <main>
+                                        <PedidoPieza onAgregar={[[agregar]]} />
+                                        <ListaPedidos pedidos={[[pedidos]]} />
+                                    </main>
+                                );
+                            }
+                        </script>
+                        <div class="fichas">
+                            <span class="ficha">agregar</span>
+                            <span class="ficha">onAgregar</span>
+                            <span class="ficha">pedidos</span>
+                            <span class="ficha">onAgregar</span>
+                            <span class="ficha">agregar()</span>
+                        </div>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div>
+                        <div class="reto-caja reto-texto tarea oculto" id="reto-li" data-xp="5" style="margin:0">
+                            <ol class="pasos"><li>Elige <b>Radar de alcance</b> y escribe un nombre en <b>Cliente</b>.</li><li>Pulsa <b>Pedir</b>.</li></ol>
+                            <div class="pantalla">
+                                <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                                <div class="pantalla-cuerpo columna">
+                                    <form class="form-mini" id="li-form">
+                                        <select id="li-pieza" aria-label="Pieza">
+                                            <option>Escudo deflector</option>
+                                            <option>Radar de alcance</option>
+                                            <option>Celda de energía</option>
+                                        </select>
+                                        <input type="text" id="li-cliente" placeholder="Cliente" aria-label="Cliente" autocomplete="off">
+                                        <button class="boton-tarjeta suelto" id="li-pedir" data-guia="pulsa Pedir">Pedir</button>
+                                    </form>
+                                    <div class="lista-pedidos" id="li-lista"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nota" id="li-nota">
+                            <h3>Quién hace qué</h3>
+                            <p><code class="inline">Taller</code> es dueño de <code class="inline">pedidos</code> y de <code class="inline">agregar</code>. <code class="inline">PedidoPieza</code> solo avisa. <code class="inline">ListaPedidos</code> solo muestra.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 8. RECORRIDO ===================== -->
+        <section class="slide" id="s-ruta" data-reto data-musica="reto" data-emote="tip"
+            data-ayuda="Arrastra las líneas, o haz clic en una y luego en otra para intercambiarlas. Después pulsa Comprobar."
+            data-nova="Cierre del recorrido: el camino completo de un pedido nuevo. Ordena los cuatro pasos de arriba abajo, desde que `Taller` define `agregar` hasta que la lista se repinta."
+            data-nova-fin="Ese es el ciclo que vas a repetir en el Mixtape: el hijo avisa, el padre cambia el estado y los hijos reciben la lista nueva por props.">
+            <div class="marco">
+                <span class="etiqueta">PASO 8 · CIERRE DEL RECORRIDO</span>
+                <h2>Qué pasa cuando alguien pulsa Pedir</h2>
+                <div class="col-ancha">
+                    <div class="w-ordenar reto-caja" data-xp="15"
+                        data-pista="Todo empieza cuando Taller le da la función al formulario. Después el usuario envía, la función corre en el padre y al final se repinta la lista.">
+                        <ol class="pasos"><li>Arrastra las líneas, o haz clic en una y luego en otra para intercambiarlas.</li><li>Pulsa <b>Comprobar</b>.</li></ol>
+                        <ol class="lineas lineas-texto">
+                            <li class="linea" data-pos="1">Taller le pasa agregar a PedidoPieza en onAgregar</li>
+                            <li class="linea" data-pos="2">El usuario pulsa Pedir y PedidoPieza llama onAgregar(...)</li>
+                            <li class="linea" data-pos="3">agregar corre en Taller y llama a setPedidos con el array nuevo</li>
+                            <li class="linea" data-pos="4">Taller se repinta y le pasa pedidos a ListaPedidos</li>
+                        </ol>
+                        <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                    </div>
+                    <div class="arbol" aria-label="Taller contiene a PedidoPieza y a ListaPedidos">
+                        <div class="arbol-nodo padre"><b>Taller</b><span>dueño de <code class="inline">pedidos</code></span></div>
+                        <div class="arbol-ramas">
+                            <div class="arbol-nodo"><b>PedidoPieza</b><span class="sube">sube: <code class="inline">onAgregar(...)</code></span></div>
+                            <div class="arbol-nodo"><b>ListaPedidos</b><span class="baja">baja: <code class="inline">pedidos</code></span></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== MINI RETO 1 ===================== -->
+        <section class="slide" id="s-match" data-reto data-musica="reto" data-emote="tip"
+            data-ayuda="Haz clic en una expresión y luego en la caja que le corresponde. Cuando estén todas, pulsa Comprobar."
+            data-nova="Mini reto final, 1 de 2. Algunos métodos cambian el array en su lugar y otros devuelven uno nuevo; con el estado sirven los segundos. `splice` quita elementos por posición y `sort` ordena. Clasifica las seis expresiones."
+            data-nova-fin="`push`, `splice` y `sort` cambian el array original. Spread, `filter` y `map` devuelven uno nuevo. Si necesitas ordenar, copia antes: `[...pedidos].sort(...)`.">
+            <div class="marco">
+                <span class="etiqueta reto">MINI RETO 1 DE 2</span>
+                <h2>¿Cambia el array o devuelve uno nuevo?</h2>
+                <div class="w-clasificar reto-caja" data-xp="15"
+                    data-pista="`push`, `splice` y `sort` modifican el array que ya existe. Spread, `filter` y `map` devuelven un array nuevo y dejan el original igual.">
+                    <ol class="pasos" style="display:flex;gap:18px;margin-bottom:2px"><li>Haz clic en una expresión y luego en la caja de su grupo.</li><li>Cuando estén todas, pulsa <b>Comprobar</b>.</li></ol>
+                    <div class="clasif-pool">
+                        <span class="item" data-cat="cambia">pedidos.push(nuevo)</span>
+                        <span class="item" data-cat="nuevo">[...pedidos, nuevo]</span>
+                        <span class="item" data-cat="cambia">pedidos.splice(1, 1)</span>
+                        <span class="item" data-cat="nuevo">pedidos.filter(...)</span>
+                        <span class="item" data-cat="cambia">pedidos.sort(...)</span>
+                        <span class="item" data-cat="nuevo">pedidos.map(...)</span>
+                    </div>
+                    <div class="cubos">
+                        <div class="cubo" data-cat="cambia"><h4>Cambia el array en su lugar</h4><div class="cubo-zona"></div></div>
+                        <div class="cubo" data-cat="nuevo"><h4>Devuelve un array nuevo</h4><div class="cubo-zona"></div></div>
+                    </div>
+                    <div class="w-acciones"><button class="btn w-comprobar">Comprobar</button></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== MINI RETO 2: CAZA-BUGS ===================== -->
+        <section class="slide" id="s-bugs" data-reto data-musica="reto" data-emote="advertencia"
+            data-ayuda="En cada fragmento, haz clic en la línea que tiene el error."
+            data-nova="Mini reto final, 2 de 2. Tres fragmentos, cada uno con un error. Haz clic en la línea que está mal. Son los fallos que más vas a encontrar esta semana."
+            data-nova-fin="Revisa esta lista si algo falla en el ejercicio: nada de `push`, `splice` ni `sort` sobre el estado, `filter` se queda con lo que da `true`, y al copiar un objeto el `...p` va antes de `listo:` para que el cambio gane.">
+            <div class="marco">
+                <span class="etiqueta reto">MINI RETO 2 DE 2</span>
+                <h2>Caza-bugs</h2>
+                <ol class="pasos" style="margin:0 0 8px"><li>Haz clic en la línea con el error de cada fragmento (con teclado: Tab y Enter).</li></ol>
+                <div class="bug-grid tres-bugs">
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Dos líneas trabajan juntas: una cambia el array en su lugar y la otra se lo pasa al set tal cual. Marca la que lo cambia en su lugar.">
+                        <p class="w-pregunta">1 · Quitar no repinta</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">function quitar(indice) {</div>
+                            <div class="bug-linea" data-bug>    pedidos.splice(indice, 1);</div>
+                            <div class="bug-linea">    setPedidos(pedidos);</div>
+                            <div class="bug-linea">}</div>
+                        </div>
+                        <p class="w-explica"><code class="inline">splice</code> cambia el array del estado y <code class="inline">setPedidos(pedidos)</code> entrega la misma referencia, así que React no repinta. Se arregla con <code class="inline">filter</code>.</p>
+                    </div>
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Revisa qué condición usa el filter.">
+                        <p class="w-pregunta">2 · Quitar deja un solo pedido</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">function borrar(id) {</div>
+                            <div class="bug-linea" data-bug>    const nuevos = pedidos.filter((p) =&gt; p.id === id);</div>
+                            <div class="bug-linea">    setPedidos(nuevos);</div>
+                            <div class="bug-linea">}</div>
+                        </div>
+                        <p class="w-explica"><code class="inline">filter</code> se queda con lo que da <code class="inline">true</code>. Con <code class="inline">===</code> queda solo el pedido que querías quitar. Se escribe <code class="inline">p.id !== id</code>.</p>
+                    </div>
+                    <div class="w-bug reto-caja" data-xp="10" data-pista="Esa línea está bien. Mira qué trae el objeto nuevo que devuelve el map.">
+                        <p class="w-pregunta">3 · Al marcar, el pedido pierde su pieza</p>
+                        <div class="codigo bug-codigo">
+                            <div class="bug-linea">function marcar(id) {</div>
+                            <div class="bug-linea">    setPedidos(pedidos.map((p) =&gt;</div>
+                            <div class="bug-linea" data-bug>        p.id === id ? { listo: !p.listo } : p</div>
+                            <div class="bug-linea">    ));</div>
+                            <div class="bug-linea">}</div>
+                        </div>
+                        <p class="w-explica">El objeto nuevo solo trae <code class="inline">listo</code>: se perdieron <code class="inline">id</code>, <code class="inline">pieza</code> y <code class="inline">cliente</code>. Falta copiar con <code class="inline">{ ...p, listo: !p.listo }</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== COMPLETO ===================== -->
+        <section class="slide" id="s-completo" data-emote="celebra"
+            data-nova="Este es `Taller` completo. Fíjate en `onMarcar` y `onBorrar`: la lista avisa con sus botones igual que el formulario con `onAgregar`. Haz un pedido, márcalo y quítalo.">
+            <div class="marco">
+                <span class="etiqueta">TU COMPONENTE</span>
+                <h2>La cola de pedidos del Taller de Nova, viva</h2>
+                <div class="col-ancha">
+                    <pre class="codigo codigo-chico" id="completo-codigo" data-listo="1"></pre>
+                    <div class="pantalla">
+                        <div class="pantalla-barra"><i></i><i></i><i></i> localhost:5173</div>
+                        <div class="pantalla-cuerpo columna">
+                            <h3 class="contador">Pendientes: <b id="co-num">0</b></h3>
+                            <form class="form-mini" id="co-form">
+                                <select id="co-pieza" aria-label="Pieza">
+                                    <option>Propulsor iónico</option>
+                                    <option>Escudo deflector</option>
+                                    <option>Celda de energía</option>
+                                    <option>Radar de alcance</option>
+                                </select>
+                                <input type="text" id="co-cliente" placeholder="Cliente" aria-label="Cliente" autocomplete="off">
+                                <button class="boton-tarjeta suelto">Pedir</button>
+                            </form>
+                            <div class="lista-pedidos" id="co-lista"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== FINAL ===================== -->
+        <section class="slide" id="s-final" data-final data-emote="celebra"
+            data-nova="¡Misión completa! En el ejercicio aplicas esto a tu Mixtape: el formulario PedidoCancion deja de perder los pedidos y los guarda en una cola que vive en App, y la lista permite quitar y marcar los que ya sonaron.">
+            <div class="marco final">
+                <span class="etiqueta">MISIÓN COMPLETA</span>
+                <h2>Listas que Cambian</h2>
+                <div class="final-estrellas"></div>
+                <div class="final-xp"></div>
+                <p class="mini-ayuda" style="margin:2px 0 0">Tiempo: <b data-tiempo-final>0:00</b></p>
+                <a class="btn" href="../../index.html" style="text-decoration:none;display:inline-block;margin-top:10px">← Volver al hangar</a>
+                <p class="receta-titulo">Tu lista de repaso para el ejercicio de la semana</p>
+                <div class="checklist">
+                    <div title="Volver a este paso" data-ir="s-push">1 · El estado es de solo lectura: <code class="inline">push</code> no repinta.</div>
+                    <div title="Volver a este paso" data-ir="s-agregar">2 · Agregar: <code class="inline">setPedidos([...pedidos, nuevo])</code>.</div>
+                    <div title="Volver a este paso" data-ir="s-borrar">3 · Borrar: <code class="inline">pedidos.filter((p) =&gt; p.id !== id)</code>.</div>
+                    <div title="Volver a este paso" data-ir="s-marcar">4 · Marcar: <code class="inline">map</code> con <code class="inline">{ ...p, listo: !p.listo }</code>.</div>
+                    <div title="Volver a este paso" data-ir="s-calculado">5 · Lo que sale del estado se calcula, sin otro <code class="inline">useState</code>.</div>
+                    <div title="Volver a este paso" data-ir="s-comparte">6 · Dos hermanos no comparten estado: sube al padre.</div>
+                    <div title="Volver a este paso" data-ir="s-lifting">7 · El hijo recibe una función <code class="inline">on...</code> por props y la llama.</div>
+                    <div title="Volver a este paso" data-ir="s-ruta">8 · El hijo avisa, el padre hace el <code class="inline">set</code> y la lista baja por props.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="nova-dock">
+        <div class="nova-retrato"></div>
+        <div class="nova-globo"><b>NOVA</b><p class="nova-texto"></p></div>
+        <div class="nav">
+            <button class="btn btn-sec nav-anterior" aria-label="Slide anterior">←</button>
+            <button class="btn btn-sec nav-pista" hidden>Pista</button>
+            <button class="btn nav-siguiente">Siguiente →</button>
+        </div>
+    </footer>
+</div>
+
+<script src="../../assets/vendor/three.min.js"></script>
+<script src="../../assets/js/fondo-espacio.js"></script>
+<script src="../../assets/js/audio.js"></script>
+<script src="../../assets/js/motor.js"></script>
+<script src="../../assets/js/guia.js"></script>
+<script src="mision.js"></script>
+</body>
+</html>

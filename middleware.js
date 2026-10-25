@@ -6,6 +6,7 @@
 // Las misiones que no estan en esta lista quedan abiertas siempre.
 const ABRE = {
   "m1-s03-interfaces-que-cobran-vida": "2026-10-18T17:00:00-05:00",
+  "m1-s04-listas-que-cambian": "2026-10-25T17:00:00-05:00",
 };
 
 // La clave del profe vive solo en la variable de entorno PROFE_PASSWORD de Vercel.
